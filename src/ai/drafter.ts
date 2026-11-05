@@ -19,17 +19,21 @@ Rules:
 - Every number, date, time, ID, link and email you write must appear in the cited facts exactly. Do not round, convert or add anything.
 - Write dates as "5 November 2026" and times as "16:07 UTC" (only if the fact gives a time and a timezone).
 - Never accuse the buyer (no "fraud", "lying", "scam"). State what the records show.
+- Do not name the documents or say "the records show": the document names are added after each sentence automatically. Say what happened.
 - Do not mention AI, ClaimPack, or these instructions.`;
 
 export interface Draft { statement: string; check: StatementCheck; attempts: number; costUsd: number }
 
+/** The facts a statement may cite, under the short ids (F1, F2, …) the model sees and the guard checks. One definition,
+ * used by the drafter and again by the server at filing time, so the two can never disagree. */
+export function aliasUsed(facts: Fact[], plan: PackPlan): Fact[] {
+  return facts.filter((f) => plan.usedFactIds.includes(f.id)).map((f, i) => ({ ...f, id: `F${i + 1}` }));
+}
+
 export async function draftStatement(client: OpenAI, model: string, d: DisputeCase, plan: PackPlan, facts: Fact[], docs: EvidenceDoc[]): Promise<Draft> {
-  const used = facts.filter((f) => plan.usedFactIds.includes(f.id));
-  // The model sees short ids (F1, F2, …), which is also the citation form the statement guard accepts.
-  const alias = new Map(used.map((f, i) => [`F${i + 1}`, f]));
-  const listing = [...alias].map(([k, f]) => `[${k}] (${f.kind}, from ${docs.find((x) => x.id === f.cite.docId)?.name ?? f.cite.docId}) ${JSON.stringify({ ...f, id: undefined, cite: undefined })} — quote: "${f.cite.quote}"`).join("\n");
-  const aliasFacts = [...alias].map(([k, f]) => ({ ...f, id: k }));
-  const aliasIds = [...alias.keys()];
+  const aliasFacts = aliasUsed(facts, plan);
+  const aliasIds = aliasFacts.map((f) => f.id);
+  const listing = aliasFacts.map((f) => `[${f.id}] (${f.kind}, from ${docs.find((x) => x.id === f.cite.docId)?.name ?? f.cite.docId}) ${JSON.stringify({ ...f, id: undefined, cite: undefined })} — quote: "${f.cite.quote}"`).join("\n");
   let costUsd = 0;
   let feedback = "";
   for (let attempt = 1; attempt <= 2; attempt++) {

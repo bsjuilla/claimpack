@@ -4,6 +4,6 @@ node_modules/
 !.env.example
 dist/
 *.log
-data/*.db
+data/
 spike/sale.json
 tmp/
