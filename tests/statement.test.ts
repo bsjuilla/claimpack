@@ -1,0 +1,66 @@
+import { describe, expect, it } from "vitest";
+import { checkStatement } from "../src/rules/statement";
+import { evidenceInput } from "../src/paypal/evidence";
+import type { DisputeCase, Fact, PackPlan } from "../src/types";
+
+const dispute: DisputeCase = {
+  id: "PP-R-TEST-1", reason: "MERCHANDISE_OR_SERVICE_NOT_RECEIVED", stage: "INQUIRY", status: "WAITING_FOR_SELLER_RESPONSE",
+  amount: { value: "120.00", currency: "USD" }, createTime: "2026-11-05T16:17:05Z", actions: ["provide_evidence"],
+  transaction: { id: "4JJ59706F4419253F", invoiceId: "INV-1042", createTime: "2026-11-05T16:05:00Z", amount: { value: "120.00", currency: "USD" } },
+};
+const facts: Fact[] = [
+  { id: "F1", kind: "delivery", method: "digital", at: "2026-11-05T16:07:00Z", detail: "Buyer downloaded logo-final.zip twice", orderRef: "INV-1042",
+    cite: { docId: "d1", quote: "05 Nov 2026 16:07 UTC  INV-1042  logo-final.zip downloaded (2 times)" } },
+  { id: "F2", kind: "description", text: "3 logo concepts in vector format", cite: { docId: "d2", quote: "Package: 3 logo concepts, vector (AI, SVG)" } },
+];
+const docs = [{ id: "d1", name: "delivery-log.pdf", mime: "application/pdf", bytes: 1, sha256: "" }, { id: "d2", name: "listing.pdf", mime: "application/pdf", bytes: 1, sha256: "" }];
+const check = (s: string, used = ["F1", "F2"]) => checkStatement(s, facts, used, dispute, docs);
+
+describe("statement guard", () => {
+  it("passes a statement where every sentence cites a used fact and every number is in the documents", () => {
+    const r = check("Order INV-1042 was delivered by download on 05 Nov 2026 at 16:07 UTC [F1]. The buyer downloaded the files 2 times [F1]. The order was 3 logo concepts in vector format [F2].");
+    expect(r.problems).toEqual([]);
+    expect(r.ok).toBe(true);
+    expect(r.notes).toBe("Order INV-1042 was delivered by download on 05 Nov 2026 at 16:07 UTC (see delivery-log.pdf). The buyer downloaded the files 2 times (see delivery-log.pdf). The order was 3 logo concepts in vector format (see listing.pdf).");
+  });
+  it("rejects a sentence with no citation", () => {
+    expect(check("The buyer received the files [F1]. We always deliver on time.").problems.map((p) => p.problem)).toContain("cites no document");
+  });
+  it("rejects a number the documents do not contain (the model must not invent detail)", () => {
+    const r = check("The buyer downloaded the files 5 times [F1].");
+    expect(r.ok).toBe(false);
+    expect(r.problems[0].problem).toMatch(/"5"/);
+  });
+  it("rejects a citation to a fact the engine did not use for this pack", () => {
+    expect(check("The order was 3 logo concepts [F2].", ["F1"]).problems[0].problem).toMatch(/not part of this evidence pack/);
+  });
+  it("rejects links and emails that are not in the documents", () => {
+    expect(check("Files are at https://evil.example/x [F1].").ok).toBe(false);
+  });
+  it("rejects accusations against the buyer", () => {
+    expect(check("The buyer is lying about delivery on 05 Nov 2026 [F1].").problems.map((p) => p.problem)).toContain("accuses the buyer; state facts only");
+  });
+  it("allows PayPal's own numbers (amount, transaction id) when a fact is cited", () => {
+    expect(check("Payment 4JJ59706F4419253F for 120.00 USD was for order INV-1042 [F1].").ok).toBe(true);
+  });
+});
+
+describe("provide-evidence request", () => {
+  const plan: PackPlan = { verdict: "READY", evidenceType: "PROOF_OF_FULFILLMENT", evidenceInfo: {}, usedFactIds: ["F1"], documentIds: ["d1"], checks: [], completeness: 100, canFileNow: true, reasons: [] };
+  it("matches the shape the sandbox accepted, with no tracking info invented", () => {
+    const input = evidenceInput(plan, "Delivered (see delivery-log.pdf).", [{ name: "delivery-log.pdf", mime: "application/pdf", data: new Uint8Array() }]);
+    expect(input).toEqual({ evidences: [{ evidence_type: "PROOF_OF_FULFILLMENT", evidence_info: {}, documents: [{ name: "delivery-log.pdf" }], notes: "Delivered (see delivery-log.pdf)." }] });
+  });
+  it("refuses to build a filing for a pack that is not READY", () => {
+    expect(() => evidenceInput({ ...plan, verdict: "INCOMPLETE" }, "x", [])).toThrow(/INCOMPLETE/);
+  });
+});
+
+describe("statement guard: dates and counts", () => {
+  it("accepts '5 November 2026' for a document that says '05 Nov 2026'", () => {
+    expect(check("The files were downloaded on 5 November 2026 [F1].").ok).toBe(true);
+  });
+  it("does not let a count borrow the day of a date", () => {
+    expect(check("The files were downloaded 5 times on 05 Nov 2026 [F1].").ok).toBe(false);
+  });
+});
