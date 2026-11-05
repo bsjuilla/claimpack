@@ -64,3 +64,31 @@ describe("statement guard: dates and counts", () => {
     expect(check("The files were downloaded 5 times on 05 Nov 2026 [F1].").ok).toBe(false);
   });
 });
+
+describe("statement guard: quotes, months and times", () => {
+  const fx: Fact[] = [{ id: "F1", kind: "acknowledgement", at: "2026-11-05T18:02:00Z", text: "Got the files, thanks! The second concept is perfect.",
+    cite: { docId: "d1", quote: "2026-11-05 18:02 UTC  Client email: \"Got the files, thanks! The second concept is perfect.\"" } }];
+  const c = (s: string) => checkStatement(s, fx, ["F1"], dispute, docs);
+  it("does not split a sentence inside a quotation", () => {
+    const r = c('The buyer wrote "Got the files, thanks! The second concept is perfect." [F1].');
+    expect(r.problems).toEqual([]);
+  });
+  it("checks the month, not just the day and year", () => {
+    expect(c("The buyer confirmed receipt on 5 November 2026 at 18:02 UTC [F1].").ok).toBe(true);
+    expect(c("The buyer confirmed receipt on 5 October 2026 [F1].").ok).toBe(false);
+    expect(c("The buyer confirmed receipt on November 5, 2026 [F1].").ok).toBe(true);
+  });
+  it("accepts 18:02 for a record time of 18:02:00, but not a different time", () => {
+    expect(c("The buyer replied at 18:02 UTC on 5 November 2026 [F1].").ok).toBe(true);
+    expect(c("The buyer replied at 18:20 UTC on 5 November 2026 [F1].").ok).toBe(false);
+  });
+});
+
+describe("sentence splitting", () => {
+  it("keeps decimals, emails and file names whole, and keeps trailing citations with their sentence", async () => {
+    const { sentences } = await import("../src/rules/statement");
+    expect(sentences("A 14.2 MB file went to a@shop.example.com at 16:05 [F1]. logo-final.zip was downloaded (2 of 2) [F2]. The buyer wrote \"Thanks! Perfect.\" [F3]."))
+      .toEqual(["A 14.2 MB file went to a@shop.example.com at 16:05 [F1].", "logo-final.zip was downloaded (2 of 2) [F2].", "The buyer wrote \"Thanks! Perfect.\" [F3]."]);
+    expect(sentences("Sent e.g. by email. [F1] Then opened [F2].")).toEqual(["Sent e.g. by email. [F1]", "Then opened [F2]."]);
+  });
+});

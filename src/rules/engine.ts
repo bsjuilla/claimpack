@@ -42,7 +42,11 @@ export function sameBuyer(who: string | undefined, d: DisputeCase["transaction"]
 export function sameOrder(ref: string | undefined, d: DisputeCase["transaction"]): boolean | undefined {
   if (!ref || !ref.trim()) return undefined;
   const r = norm(ref);
-  return [d.id, d.invoiceId].filter(Boolean).some((x) => norm(x!) === r);
+  if (norm(d.id) === r) return true;
+  if (d.invoiceId) return norm(d.invoiceId) === r;
+  // PayPal holds no invoice number for this payment, so the seller's own order number can be neither confirmed nor
+  // refuted, unless it is itself a PayPal transaction ID (17 letters and digits) for a different payment.
+  return /^[0-9A-Z]{17}$/i.test(ref.trim()) ? false : undefined;
 }
 
 function refOf(f: Fact): string | undefined {
@@ -209,8 +213,11 @@ function requirementsFor(d: DisputeCase, of: Of, allowed: EvidenceType[]) {
   const recLinked = (fs: Fact[]) => {
     if (!fs.length) return;
     const l = linked(fs);
-    checks.push({ id: "rec-linked", label: "Evidence names this order or buyer", status: l.length ? "ok" : "warn", required: false,
-      detail: l.length ? "At least one document names the order number or the buyer." : "No document names the order number or the buyer; PayPal may not connect it to this payment.", factIds: l.map((f) => f.id) });
+    const refs = [...new Set(fs.map(refOf).filter(Boolean))];
+    const detail = l.length ? "At least one document names this payment's order number or the buyer."
+      : refs.length && !d.transaction.invoiceId ? `Your documents say ${refs.join(", ")}, but PayPal's record of this payment has no invoice number, so PayPal may not connect them. Send your order number as invoice_id when you create PayPal orders.`
+      : "No document names the order number or the buyer; PayPal may not connect it to this payment.";
+    checks.push({ id: "rec-linked", label: "Evidence names this order or buyer", status: l.length ? "ok" : "warn", required: false, detail, factIds: l.map((f) => f.id) });
   };
 
   const trackingFacts = of("tracking").filter((f) => f.carrier && f.trackingNumber);

@@ -173,3 +173,16 @@ describe("other reasons", () => {
     expect(p.verdict).toBe("READY");
   });
 });
+
+describe("when PayPal has no invoice number for the payment", () => {
+  const noInv = dispute({ transaction: { ...dispute().transaction, invoiceId: undefined } });
+  it("the seller's own order number is neither confirmed nor refuted, so the evidence is kept", () => {
+    const p = planPack({ dispute: noInv, docs: [doc("delivery-log")], now: NOW,
+      facts: [{ id: "f1", kind: "delivery", method: "digital", at: "2026-11-05T16:07:00Z", detail: "sent", orderRef: "INV-1042", cite: cite("delivery-log") }] });
+    expect(p.verdict).toBe("READY");
+    expect(p.checks.find((c) => c.id === "rec-linked")?.detail).toMatch(/no invoice number/);
+  });
+  it("a different PayPal transaction ID is still a different order", () => {
+    expect(sameOrder("9XX11111A2222333B", noInv.transaction)).toBe(false);
+  });
+});

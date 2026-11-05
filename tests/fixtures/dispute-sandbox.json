@@ -1,0 +1,146 @@
+{
+ "dispute_id": "PP-R-ZDG-10196662",
+ "create_time": "2026-11-05T16:17:05.448Z",
+ "update_time": "2026-11-05T16:21:43.988Z",
+ "disputed_transactions": [
+  {
+   "buyer_transaction_id": "47591265VG784022H",
+   "seller_transaction_id": "4JJ59706F4419253F",
+   "create_time": "2026-11-05T16:08:34.000Z",
+   "transaction_status": "HELD",
+   "gross_amount": {
+    "currency_code": "USD",
+    "value": "120.00"
+   },
+   "buyer": {
+    "email": "sb-jg5gb50494750@personal.example.com",
+    "payer_id": "KP3L2QQ7HTL32",
+    "name": "John Doe"
+   },
+   "seller": {
+    "email": "sb-u43uwx50352328@business.example.com",
+    "merchant_id": "D67S2XAQS9Z24",
+    "name": "Test Store"
+   },
+   "items": [
+    {
+     "item_name": "ClaimPack spike: logo design (digital delivery)",
+     "item_description": "ClaimPack spike: logo design (digital delivery)",
+     "item_quantity": "1",
+     "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+     "item_type": "DIGITAL_DOWNLOAD"
+    }
+   ],
+   "seller_protection_eligible": true,
+   "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+  }
+ ],
+ "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+ "status": "WAITING_FOR_BUYER_RESPONSE",
+ "dispute_amount": {
+  "currency_code": "USD",
+  "value": "120.00"
+ },
+ "dispute_state": "REQUIRED_OTHER_PARTY_ACTION",
+ "fund_movements": [
+  {
+   "party": "RECEIVER",
+   "amount": {
+    "currency_code": "USD",
+    "value": "115.62"
+   },
+   "initiated_time": "2026-11-05T16:20:34.000Z",
+   "type": "DEBIT",
+   "reason": "HOLD_PLACED"
+  }
+ ],
+ "dispute_life_cycle_stage": "INQUIRY",
+ "dispute_channel": "INTERNAL",
+ "messages": [
+  {
+   "posted_by": "BUYER",
+   "time_posted": "2026-11-05T16:17:05.448Z",
+   "content": "The logo design files were never delivered after payment. I have not received the item."
+  }
+ ],
+ "extensions": {
+  "merchant_contacted": false,
+  "buyer_contacted_time": "2026-11-05T16:17:04.766Z"
+ },
+ "evidences": [
+  {
+   "evidence_type": "CREATE",
+   "notes": "The logo design files were never delivered after payment. I have not received the item.",
+   "source": "SUBMITTED_BY_BUYER",
+   "date": "2026-11-05T16:17:05.448Z",
+   "dispute_life_cycle_stage": "INQUIRY"
+  },
+  {
+   "evidence_type": "PROOF_OF_FULFILLMENT",
+   "evidence_info": {
+    "tracking_info": [
+     {
+      "carrier_name": "OTHER",
+      "carrier_name_other": "Digital download",
+      "tracking_number": "DL-20261105-0001"
+     }
+    ]
+   },
+   "documents": [
+    {
+     "name": "delivery-log.txt",
+     "url": "https://api-m.sandbox.paypal.com/v2/content/documents/DIS-010-11f1-d934-f6a6a840-862c-9112ed67a75d/files/1/download"
+    }
+   ],
+   "notes": "Logo files were delivered on 5 Nov 2026 via download link; delivery log attached.",
+   "source": "SUBMITTED_BY_SELLER",
+   "date": "2026-11-05T16:21:32.815Z",
+   "action_info": {
+    "action": "PROVIDE_EVIDENCE"
+   },
+   "dispute_life_cycle_stage": "INQUIRY"
+  }
+ ],
+ "buyer_response_due_date": "2026-11-25T16:17:05.448Z",
+ "offer": {
+  "buyer_requested_amount": {
+   "currency_code": "USD",
+   "value": "120.00"
+  }
+ },
+ "refund_details": {
+  "allowed_refund_amount": {
+   "currency_code": "USD",
+   "value": "120.00"
+  }
+ },
+ "allowed_response_options": {
+  "accept_claim": {
+   "accept_claim_types": [
+    "REFUND"
+   ]
+  }
+ },
+ "links": [
+  {
+   "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-ZDG-10196662",
+   "rel": "self",
+   "method": "GET"
+  },
+  {
+   "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-ZDG-10196662/accept-claim",
+   "rel": "accept_claim",
+   "method": "POST"
+  },
+  {
+   "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-ZDG-10196662/send-message",
+   "rel": "send_message",
+   "method": "POST"
+  },
+  {
+   "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-ZDG-10196662/escalate",
+   "rel": "escalate",
+   "method": "POST"
+  }
+ ]
+}
