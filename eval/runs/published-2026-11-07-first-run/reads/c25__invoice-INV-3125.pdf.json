@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3125.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Invoice no. INV-3125",
+    "page": 1,
+    "at": "2026-10-07",
+    "order_ref": "INV-3125",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "180.00",
+    "amount_currency": "USD",
+    "buyer": "Lily Evans",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Website copywriting, 6 pages",
+    "page": 1,
+    "at": "2026-10-07",
+    "order_ref": "INV-3125",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Website copywriting, 6 pages",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3125.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3125",
+   "buyer": "Lily Evans",
+   "amount": {
+    "value": "180.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-07",
+   "cite": {
+    "docId": "invoice-INV-3125.pdf",
+    "page": 1,
+    "quote": "Invoice no. INV-3125"
+   }
+  },
+  {
+   "id": "invoice-INV-3125.pdf#2",
+   "kind": "description",
+   "text": "Website copywriting, 6 pages",
+   "cite": {
+    "docId": "invoice-INV-3125.pdf",
+    "page": 1,
+    "quote": "Website copywriting, 6 pages"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.01179175,
+ "ms": 11247
+}

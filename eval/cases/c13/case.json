@@ -1,0 +1,49 @@
+{
+ "id": "c13",
+ "title": "Files downloaded after the buyer complained",
+ "trap": "late delivery (still filable, warned)",
+ "dispute": {
+  "id": "PP-R-EVAL-0013",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "55.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-25T08:00:00Z",
+  "sellerResponseDue": "2026-11-14T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV137K3M9Q1X4P8W2",
+   "invoiceId": "INV-3113",
+   "createTime": "2026-10-20T08:00:00Z",
+   "amount": {
+    "value": "55.00",
+    "currency": "USD"
+   },
+   "buyerName": "Chloe Dubois",
+   "buyerEmail": "chloe.dubois@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "delivery-log.txt",
+   "kind": "delivery-log"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "PROOF_OF_FULFILLMENT",
+  "attach": [
+   "delivery-log.txt"
+  ]
+ }
+}

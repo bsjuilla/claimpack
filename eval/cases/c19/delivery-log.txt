@@ -1,0 +1,4 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3119 | Client: Zoe Martin <zoe.martin@example.com>
+2026-10-12 11:00 UTC  Files emailed: banner-set-INV-3119.zip

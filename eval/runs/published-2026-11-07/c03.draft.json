@@ -1,0 +1,8 @@
+{
+ "statement": "The order INV-3103 was shipped via Mauritius Post with tracking number RR482019337MU [F1]. The shipment was addressed to Priya Ramdin [F1]. It was marked as Delivered on 9 October 2026 [F1].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The order INV-3103 was shipped via Mauritius Post with tracking number RR482019337MU (see mauritius-post-tracking.png). The shipment was addressed to Priya Ramdin (see mauritius-post-tracking.png). It was marked as Delivered on 9 October 2026 (see mauritius-post-tracking.png).",
+ "costUsd": 0.0054285
+}

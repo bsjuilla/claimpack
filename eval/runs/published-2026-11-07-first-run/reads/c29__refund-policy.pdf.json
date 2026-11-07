@@ -1,0 +1,77 @@
+{
+ "docId": "refund-policy.pdf",
+ "output": {
+  "document_type": "terms_or_policy",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "policy",
+    "quote": "1. Digital products can be refunded within 7 days if they have not been downloaded.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": "refund",
+    "from": null
+   },
+   {
+    "kind": "policy",
+    "quote": "2. Once a file has been downloaded, the sale is final.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": "refund",
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "refund-policy.pdf#1",
+   "kind": "policy",
+   "policy": "refund",
+   "text": "1. Digital products can be refunded within 7 days if they have not been downloaded.",
+   "cite": {
+    "docId": "refund-policy.pdf",
+    "page": 1,
+    "quote": "1. Digital products can be refunded within 7 days if they have not been downloaded."
+   }
+  },
+  {
+   "id": "refund-policy.pdf#2",
+   "kind": "policy",
+   "policy": "refund",
+   "text": "2. Once a file has been downloaded, the sale is final.",
+   "cite": {
+    "docId": "refund-policy.pdf",
+    "page": 1,
+    "quote": "2. Once a file has been downloaded, the sale is final."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.00843925,
+ "ms": 5144
+}

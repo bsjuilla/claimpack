@@ -1,0 +1,79 @@
+{
+ "docId": "delivery-log.txt",
+ "output": {
+  "document_type": "delivery_log",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "delivery",
+    "quote": "2026-10-01 08:30 UTC  Download link emailed for poster-INV-3112.pdf",
+    "page": null,
+    "at": "2026-10-01T08:30:00Z",
+    "order_ref": "INV-3112",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": "digital",
+    "detail": "Download link emailed for poster-INV-3112.pdf",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Mateo Rossi",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "2026-10-01 09:00 UTC  poster-INV-3112.pdf downloaded (1 of 1)",
+    "page": null,
+    "at": "2026-10-01T09:00:00Z",
+    "order_ref": "INV-3112",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": "digital",
+    "detail": "poster-INV-3112.pdf downloaded (1 of 1)",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Mateo Rossi",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "delivery-log.txt#1",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-01T08:30:00Z",
+   "detail": "Download link emailed for poster-INV-3112.pdf",
+   "orderRef": "INV-3112",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "2026-10-01 08:30 UTC  Download link emailed for poster-INV-3112.pdf"
+   }
+  },
+  {
+   "id": "delivery-log.txt#2",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-01T09:00:00Z",
+   "detail": "poster-INV-3112.pdf downloaded (1 of 1)",
+   "orderRef": "INV-3112",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "2026-10-01 09:00 UTC  poster-INV-3112.pdf downloaded (1 of 1)"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0098,
+ "ms": 24393
+}

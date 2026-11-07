@@ -1,0 +1,5 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Client: Maria Lopez <maria.lopez@example.com>
+2026-10-11 10:00 UTC  Download link emailed for brochure.zip
+2026-10-11 10:30 UTC  brochure.zip downloaded (1 of 1)

@@ -1,0 +1,45 @@
+{
+ "id": "c08",
+ "title": "Same order, but delivered to someone else",
+ "trap": "recipient contradicts buyer",
+ "dispute": {
+  "id": "PP-R-EVAL-0008",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "88.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-27T08:00:00Z",
+  "sellerResponseDue": "2026-11-16T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV087K3M9Q1X4P8W2",
+   "invoiceId": "INV-3108",
+   "createTime": "2026-10-10T08:00:00Z",
+   "amount": {
+    "value": "88.00",
+    "currency": "USD"
+   },
+   "buyerName": "Oliver Grant",
+   "buyerEmail": "oliver.grant@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "tracking.png",
+   "kind": "tracking-png"
+  }
+ ],
+ "gold": {
+  "verdict": "CONFLICT"
+ }
+}

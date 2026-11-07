@@ -1,0 +1,54 @@
+{
+ "id": "c01",
+ "title": "Digital logo files, delivery log and invoice",
+ "trap": "none (clean)",
+ "dispute": {
+  "id": "PP-R-EVAL-0001",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "120.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-24T08:00:00Z",
+  "sellerResponseDue": "2026-11-13T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV017K3M9Q1X4P8W2",
+   "invoiceId": "INV-3101",
+   "createTime": "2026-10-20T09:12:00Z",
+   "amount": {
+    "value": "120.00",
+    "currency": "USD"
+   },
+   "buyerName": "Amelia Hart",
+   "buyerEmail": "amelia.hart@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "delivery-log.txt",
+   "kind": "delivery-log"
+  },
+  {
+   "name": "invoice-INV-3101.pdf",
+   "kind": "invoice"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "PROOF_OF_FULFILLMENT",
+  "attach": [
+   "delivery-log.txt",
+   "invoice-INV-3101.pdf"
+  ]
+ }
+}

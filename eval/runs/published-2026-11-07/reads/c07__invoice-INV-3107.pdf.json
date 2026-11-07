@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3107.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Total paid: 52.00 USD",
+    "page": 1,
+    "at": "2026-10-14",
+    "order_ref": "INV-3107",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "52.00",
+    "amount_currency": "USD",
+    "buyer": "Grace Liu",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Ceramic mug set, 4 pieces",
+    "page": 1,
+    "at": "2026-10-14",
+    "order_ref": "INV-3107",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Ceramic mug set, 4 pieces",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3107.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3107",
+   "buyer": "Grace Liu",
+   "amount": {
+    "value": "52.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-14",
+   "cite": {
+    "docId": "invoice-INV-3107.pdf",
+    "page": 1,
+    "quote": "Total paid: 52.00 USD"
+   }
+  },
+  {
+   "id": "invoice-INV-3107.pdf#2",
+   "kind": "description",
+   "text": "Ceramic mug set, 4 pieces",
+   "cite": {
+    "docId": "invoice-INV-3107.pdf",
+    "page": 1,
+    "quote": "Ceramic mug set, 4 pieces"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.01165275,
+ "ms": 10163
+}

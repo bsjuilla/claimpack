@@ -1,0 +1,82 @@
+{
+ "docId": "tracking.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "7790 1122 3344",
+    "page": null,
+    "at": "2026-10-09T13:15:00",
+    "order_ref": "INV-3122",
+    "transaction_id": null,
+    "carrier": "FedEx",
+    "tracking_number": "7790 1122 3344",
+    "tracking_status": "delivered",
+    "recipient": "Ryan Murphy",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "Delivered",
+    "page": null,
+    "at": "2026-10-09T13:15:00",
+    "order_ref": "INV-3122",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Ryan Murphy",
+    "delivery_method": "physical",
+    "detail": "Denver, CO",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "tracking.png#1",
+   "kind": "tracking",
+   "carrier": "FedEx",
+   "trackingNumber": "7790 1122 3344",
+   "status": "delivered",
+   "at": "2026-10-09T13:15:00",
+   "recipient": "Ryan Murphy",
+   "orderRef": "INV-3122",
+   "cite": {
+    "docId": "tracking.png",
+    "quote": "7790 1122 3344"
+   }
+  },
+  {
+   "id": "tracking.png#2",
+   "kind": "delivery",
+   "method": "physical",
+   "at": "2026-10-09T13:15:00",
+   "detail": "Denver, CO",
+   "recipient": "Ryan Murphy",
+   "orderRef": "INV-3122",
+   "cite": {
+    "docId": "tracking.png",
+    "quote": "Delivered"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.008793,
+ "ms": 17723
+}

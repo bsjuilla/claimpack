@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3105.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Invoice no. INV-3105",
+    "page": 1,
+    "at": "2026-10-21",
+    "order_ref": "INV-3105",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "75.00",
+    "amount_currency": "USD",
+    "buyer": "Sofia Marin",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Brand style guide, 12 pages",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3105.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3105",
+   "buyer": "Sofia Marin",
+   "amount": {
+    "value": "75.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-21",
+   "cite": {
+    "docId": "invoice-INV-3105.pdf",
+    "page": 1,
+    "quote": "Invoice no. INV-3105"
+   }
+  },
+  {
+   "id": "invoice-INV-3105.pdf#2",
+   "kind": "description",
+   "text": "Brand style guide, 12 pages",
+   "cite": {
+    "docId": "invoice-INV-3105.pdf",
+    "page": 1,
+    "quote": "Brand style guide, 12 pages"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.01044025,
+ "ms": 7467
+}

@@ -1,0 +1,49 @@
+{
+ "docId": "mauritius-post-tracking.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "Delivered",
+    "page": null,
+    "at": "2026-10-09T11:20",
+    "order_ref": "INV-3103",
+    "transaction_id": null,
+    "carrier": "Mauritius Post",
+    "tracking_number": "RR482019337MU",
+    "tracking_status": "delivered",
+    "recipient": "Priya Ramdin",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "mauritius-post-tracking.png#1",
+   "kind": "tracking",
+   "carrier": "Mauritius Post",
+   "trackingNumber": "RR482019337MU",
+   "status": "delivered",
+   "at": "2026-10-09T11:20",
+   "recipient": "Priya Ramdin",
+   "orderRef": "INV-3103",
+   "cite": {
+    "docId": "mauritius-post-tracking.png",
+    "quote": "Delivered"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.00933275,
+ "ms": 22788
+}

@@ -1,0 +1,10 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+From: billing@studio.example
+Subject: Your refund has been sent
+
+Hello,
+We have refunded 48.00 USD to your PayPal account on 27 October 2026.
+Refund ID: 4RF88213AB0012345
+
+Kind regards,
+Studio billing

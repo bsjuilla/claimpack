@@ -1,0 +1,104 @@
+{
+ "docId": "chat-screenshot.png",
+ "output": {
+  "document_type": "email_or_chat",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "communication",
+    "quote": "Hi! I'd like to book the 2-hour logo workshop for next week, paying now.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Hi! I'd like to book the 2-hour logo workshop for next week, paying now.",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "buyer"
+   },
+   {
+    "kind": "communication",
+    "quote": "Booked for 11 October. Thanks Nora!",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Booked for 11 October. Thanks Nora!",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "seller"
+   },
+   {
+    "kind": "acknowledgement",
+    "quote": "Thanks for today's session, really useful.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "buyer"
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "chat-screenshot.png#1",
+   "kind": "communication",
+   "from": "buyer",
+   "text": "Hi! I'd like to book the 2-hour logo workshop for next week, paying now.",
+   "cite": {
+    "docId": "chat-screenshot.png",
+    "quote": "Hi! I'd like to book the 2-hour logo workshop for next week, paying now."
+   }
+  },
+  {
+   "id": "chat-screenshot.png#2",
+   "kind": "communication",
+   "from": "seller",
+   "text": "Booked for 11 October. Thanks Nora!",
+   "cite": {
+    "docId": "chat-screenshot.png",
+    "quote": "Booked for 11 October. Thanks Nora!"
+   }
+  },
+  {
+   "id": "chat-screenshot.png#3",
+   "kind": "acknowledgement",
+   "text": "Thanks for today's session, really useful.",
+   "cite": {
+    "docId": "chat-screenshot.png",
+    "quote": "Thanks for today's session, really useful."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.009368,
+ "ms": 24177
+}

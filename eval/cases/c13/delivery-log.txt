@@ -1,0 +1,5 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3113 | Client: Chloe Dubois <chloe.dubois@example.com>
+2026-10-25 12:00 UTC  Download link re-sent for wedding-invite-INV-3113.pdf
+2026-10-25 13:15 UTC  wedding-invite-INV-3113.pdf downloaded (1 of 1)

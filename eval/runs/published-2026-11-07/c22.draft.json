@@ -1,0 +1,8 @@
+{
+ "statement": "Order INV-3122 was shipped with FedEx [F1]. The tracking number is 7790 1122 3344 [F1]. The shipment was delivered on 9 October 2026 [F1]. The recipient was Ryan Murphy [F1].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "Order INV-3122 was shipped with FedEx (see tracking.png). The tracking number is 7790 1122 3344 (see tracking.png). The shipment was delivered on 9 October 2026 (see tracking.png). The recipient was Ryan Murphy (see tracking.png).",
+ "costUsd": 0.005411
+}

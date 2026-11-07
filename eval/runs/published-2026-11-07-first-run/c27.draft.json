@@ -1,0 +1,8 @@
+{
+ "statement": "The plan renews on the 1st of each month [F1]. Cancellation must be made at least 48 hours before the renewal date [F2]. A cancellation made less than 48 hours before the renewal date does not avoid the next charge [F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The plan renews on the 1st of each month (see subscription-terms.pdf). Cancellation must be made at least 48 hours before the renewal date (see subscription-terms.pdf). A cancellation made less than 48 hours before the renewal date does not avoid the next charge (see subscription-terms.pdf).",
+ "costUsd": 0.00575425
+}

@@ -1,0 +1,49 @@
+{
+ "id": "c29",
+ "title": "Refund not processed: return policy says no refund after download",
+ "trap": "policy as defence",
+ "dispute": {
+  "id": "PP-R-EVAL-0029",
+  "reason": "CREDIT_NOT_PROCESSED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "29.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-24T08:00:00Z",
+  "sellerResponseDue": "2026-11-13T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV297K3M9Q1X4P8W2",
+   "invoiceId": "INV-3129",
+   "createTime": "2026-10-10T08:00:00Z",
+   "amount": {
+    "value": "29.00",
+    "currency": "USD"
+   },
+   "buyerName": "Ruby Hall",
+   "buyerEmail": "ruby.hall@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "refund-policy.pdf",
+   "kind": "terms"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "OTHER",
+  "attach": [
+   "refund-policy.pdf"
+  ]
+ }
+}

@@ -1,0 +1,136 @@
+{
+ "docId": "project-terms.pdf",
+ "output": {
+  "document_type": "contract",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "description",
+    "quote": "1. Scope: 20 edited product photographs on a white background, delivered as JPEG files.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "2. Revisions: one round of colour corrections.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "3. Not included: retouching of the products themselves.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "acknowledgement",
+    "quote": "4. Agreed by the client by email on 1 October 2026.",
+    "page": 1,
+    "at": "2026-10-01",
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "project-terms.pdf#1",
+   "kind": "description",
+   "text": "1. Scope: 20 edited product photographs on a white background, delivered as JPEG files.",
+   "cite": {
+    "docId": "project-terms.pdf",
+    "page": 1,
+    "quote": "1. Scope: 20 edited product photographs on a white background, delivered as JPEG files."
+   }
+  },
+  {
+   "id": "project-terms.pdf#2",
+   "kind": "description",
+   "text": "2. Revisions: one round of colour corrections.",
+   "cite": {
+    "docId": "project-terms.pdf",
+    "page": 1,
+    "quote": "2. Revisions: one round of colour corrections."
+   }
+  },
+  {
+   "id": "project-terms.pdf#3",
+   "kind": "description",
+   "text": "3. Not included: retouching of the products themselves.",
+   "cite": {
+    "docId": "project-terms.pdf",
+    "page": 1,
+    "quote": "3. Not included: retouching of the products themselves."
+   }
+  },
+  {
+   "id": "project-terms.pdf#4",
+   "kind": "acknowledgement",
+   "at": "2026-10-01",
+   "text": "4. Agreed by the client by email on 1 October 2026.",
+   "cite": {
+    "docId": "project-terms.pdf",
+    "page": 1,
+    "quote": "4. Agreed by the client by email on 1 October 2026."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.010328,
+ "ms": 9300
+}

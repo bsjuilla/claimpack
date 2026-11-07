@@ -1,0 +1,53 @@
+{
+ "id": "c18",
+ "title": "Not as described: listing and delivery on file",
+ "trap": "none (clean)",
+ "dispute": {
+  "id": "PP-R-EVAL-0018",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "130.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-22T08:00:00Z",
+  "sellerResponseDue": "2026-11-11T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV187K3M9Q1X4P8W2",
+   "invoiceId": "INV-3118",
+   "createTime": "2026-10-09T08:00:00Z",
+   "amount": {
+    "value": "130.00",
+    "currency": "USD"
+   },
+   "buyerName": "Leo Fischer",
+   "buyerEmail": "leo.fischer@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "listing.txt",
+   "kind": "listing"
+  },
+  {
+   "name": "delivery-log.txt",
+   "kind": "delivery-log"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "OTHER",
+  "attach": [
+   "listing.txt"
+  ]
+ }
+}

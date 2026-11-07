@@ -1,0 +1,8 @@
+{
+ "statement": "The order reference is INV-3114 [F1]. The delivery method was digital [F1]. A link was sent to the client for album-cover-INV-3114.zip at 05/10 08:45 [F1]. album-cover-INV-3114.zip was downloaded (1 of 1) at 05/10 09:30 [F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The order reference is INV-3114 (see delivery-log.txt). The delivery method was digital (see delivery-log.txt). A link was sent to the client for album-cover-INV-3114.zip at 05/10 08:45 (see delivery-log.txt). album-cover-INV-3114.zip was downloaded (1 of 1) at 05/10 09:30 (see delivery-log.txt).",
+ "costUsd": 0.00824275
+}

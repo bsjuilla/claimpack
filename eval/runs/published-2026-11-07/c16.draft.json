@@ -1,0 +1,8 @@
+{
+ "statement": "A refund of 48.00 USD was issued on 27 October 2026 [F1]. The refund ID is 4RF88213AB0012345 [F1]. The refunded amount was 48.00 USD [F1].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "A refund of 48.00 USD was issued on 27 October 2026 (see refund-confirmation.txt). The refund ID is 4RF88213AB0012345 (see refund-confirmation.txt). The refunded amount was 48.00 USD (see refund-confirmation.txt).",
+ "costUsd": 0.00625175
+}

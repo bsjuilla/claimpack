@@ -1,0 +1,5 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3110 | Client: Ethan Cole <ethan.cole@example.com>
+2026-10-16 08:40 UTC  Download link emailed for icon-set-INV-3110.zip
+2026-10-16 09:05 UTC  icon-set-INV-3110.zip downloaded (1 of 1)

@@ -1,0 +1,73 @@
+{
+ "docId": "listing.txt",
+ "output": {
+  "document_type": "listing",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "description",
+    "quote": "Listing: Social media template pack",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "30 editable templates for Instagram posts, delivered by download link.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "listing.txt#1",
+   "kind": "description",
+   "text": "Listing: Social media template pack",
+   "cite": {
+    "docId": "listing.txt",
+    "quote": "Listing: Social media template pack"
+   }
+  },
+  {
+   "id": "listing.txt#2",
+   "kind": "description",
+   "text": "30 editable templates for Instagram posts, delivered by download link.",
+   "cite": {
+    "docId": "listing.txt",
+    "quote": "30 editable templates for Instagram posts, delivered by download link."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.006693,
+ "ms": 16250
+}

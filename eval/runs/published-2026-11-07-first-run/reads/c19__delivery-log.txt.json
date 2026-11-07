@@ -1,0 +1,78 @@
+{
+ "docId": "delivery-log.txt",
+ "output": {
+  "document_type": "delivery_log",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Order INV-3119 | Client: Zoe Martin <zoe.martin@example.com>",
+    "page": null,
+    "at": null,
+    "order_ref": "INV-3119",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Zoe Martin <zoe.martin@example.com>",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "2026-10-12 11:00 UTC  Files emailed: banner-set-INV-3119.zip",
+    "page": null,
+    "at": "2026-10-12T11:00:00Z",
+    "order_ref": "INV-3119",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Zoe Martin <zoe.martin@example.com>",
+    "delivery_method": "digital",
+    "detail": "banner-set-INV-3119.zip",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Zoe Martin <zoe.martin@example.com>",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "delivery-log.txt#1",
+   "kind": "invoice",
+   "orderRef": "INV-3119",
+   "buyer": "Zoe Martin <zoe.martin@example.com>",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "Order INV-3119 | Client: Zoe Martin <zoe.martin@example.com>"
+   }
+  },
+  {
+   "id": "delivery-log.txt#2",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-12T11:00:00Z",
+   "detail": "banner-set-INV-3119.zip",
+   "recipient": "Zoe Martin <zoe.martin@example.com>",
+   "orderRef": "INV-3119",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "2026-10-12 11:00 UTC  Files emailed: banner-set-INV-3119.zip"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.01059075,
+ "ms": 30340
+}

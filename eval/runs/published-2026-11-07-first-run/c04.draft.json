@@ -1,0 +1,8 @@
+{
+ "statement": "The buyer sent the message \"Got them, thank you! They look great.\" [F1]. The message confirms the items were received [F1]. The message includes thanks for the items [F1]. The message states they look great [F1].",
+ "ok": true,
+ "attempts": 2,
+ "problems": [],
+ "notes": "The buyer sent the message \"Got them, thank you! They look great.\" (see chat-screenshot.png). The message confirms the items were received (see chat-screenshot.png). The message includes thanks for the items (see chat-screenshot.png). The message states they look great (see chat-screenshot.png).",
+ "costUsd": 0.011356
+}

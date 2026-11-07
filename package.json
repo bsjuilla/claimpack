@@ -12,7 +12,10 @@
     "web:dev": "vite --config web/vite.config.ts",
     "web:build": "vite build --config web/vite.config.ts",
     "app": "npm run web:build && tsx server/index.ts",
-    "typecheck:web": "tsc --noEmit -p web/tsconfig.json"
+    "typecheck:web": "tsc --noEmit -p web/tsconfig.json",
+    "eval:build": "tsx scripts/eval/build.ts",
+    "eval": "tsx scripts/eval/run.ts",
+    "secret-scan": "node scripts/secret-scan.mjs"
   },
   "engines": {
     "node": ">=22.5"

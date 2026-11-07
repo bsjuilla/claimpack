@@ -1,0 +1,49 @@
+{
+ "id": "c10",
+ "title": "Refund email with a refund ID PayPal never issued",
+ "trap": "unverifiable refund",
+ "dispute": {
+  "id": "PP-R-EVAL-0010",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "60.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-28T08:00:00Z",
+  "sellerResponseDue": "2026-11-17T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV107K3M9Q1X4P8W2",
+   "invoiceId": "INV-3110",
+   "createTime": "2026-10-16T08:00:00Z",
+   "amount": {
+    "value": "60.00",
+    "currency": "USD"
+   },
+   "buyerName": "Ethan Cole",
+   "buyerEmail": "ethan.cole@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "delivery-log.txt",
+   "kind": "delivery-log"
+  },
+  {
+   "name": "refund-confirmation.txt",
+   "kind": "refund-email"
+  }
+ ],
+ "gold": {
+  "verdict": "CONFLICT"
+ }
+}

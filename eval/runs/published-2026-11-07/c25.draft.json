@@ -1,0 +1,8 @@
+{
+ "statement": "INV-3125 was for Lily Evans [F1]. The amount was 180.00 USD [F1]. The date was 7 October 2026 [F1].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "INV-3125 was for Lily Evans (see invoice-INV-3125.pdf). The amount was 180.00 USD (see invoice-INV-3125.pdf). The date was 7 October 2026 (see invoice-INV-3125.pdf).",
+ "costUsd": 0.006978
+}

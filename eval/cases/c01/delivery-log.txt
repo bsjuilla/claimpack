@@ -1,0 +1,5 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3101 | Client: Amelia Hart <amelia.hart@example.com>
+2026-10-20 09:30 UTC  Download link emailed for logo-pack-INV-3101.zip (22.4 MB)
+2026-10-20 10:02 UTC  logo-pack-INV-3101.zip downloaded (1 of 1)

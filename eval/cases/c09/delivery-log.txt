@@ -1,0 +1,5 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3109 | Client: Hannah Wells <hannah.wells@example.com>
+2026-10-19 09:00 UTC  Download link emailed for presentation-template.zip
+2026-10-19 09:20 UTC  presentation-template.zip downloaded (1 of 1)

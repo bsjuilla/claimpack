@@ -46,7 +46,9 @@ export interface Cite {
 /** Facts the AI read from the seller's own documents. Every fact carries its quote. */
 export type Fact =
   | { id: string; kind: "tracking"; carrier: string; trackingNumber: string; status?: "shipped" | "delivered"; at?: string; recipient?: string; orderRef?: string; cite: Cite }
-  | { id: string; kind: "delivery"; method: "digital" | "physical" | "service"; at: string; detail: string; recipient?: string; orderRef?: string; cite: Cite }
+  | { id: string; kind: "delivery"; method: "digital" | "physical" | "service"; at: string; detail: string; recipient?: string; orderRef?: string; cite: Cite;
+      /** set when the record gives a date without a year (at is then ""): the engine resolves it against the payment date */
+      atText?: string }
   | { id: string; kind: "refund"; refundId: string; amount?: Money; at?: string; cite: Cite }
   | { id: string; kind: "invoice"; orderRef?: string; transactionId?: string; buyer?: string; amount?: Money; at?: string; cite: Cite }
   | { id: string; kind: "description"; text: string; cite: Cite }

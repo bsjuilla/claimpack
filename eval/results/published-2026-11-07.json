@@ -1,0 +1,25 @@
+{
+ "run": "published-2026-11-07",
+ "cases": 30,
+ "documents": 39,
+ "readerModel": "muse-spark-1.3",
+ "scoredAt": "2026-11-07T08:11:36.816Z",
+ "evalNow": "2026-11-07T12:00:00Z",
+ "allChecks": "30/30",
+ "verdicts": "30/30",
+ "evidenceType": "17/17",
+ "attachments": "30/30",
+ "injectionsCaught": "2/2",
+ "falseQuarantines": 0,
+ "dangerous": 0,
+ "statements": {
+  "drafted": 17,
+  "passedGuard": 17,
+  "firstAttempt": 16
+ },
+ "costUsd": {
+  "reading": 0.3778,
+  "drafting": 0.1236
+ },
+ "failures": []
+}

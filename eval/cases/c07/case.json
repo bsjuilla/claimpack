@@ -1,0 +1,52 @@
+{
+ "id": "c07",
+ "title": "Tracking belongs to a different order",
+ "trap": "foreign document",
+ "dispute": {
+  "id": "PP-R-EVAL-0007",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "52.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-31T08:00:00Z",
+  "sellerResponseDue": "2026-11-20T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV077K3M9Q1X4P8W2",
+   "invoiceId": "INV-3107",
+   "createTime": "2026-10-14T08:00:00Z",
+   "amount": {
+    "value": "52.00",
+    "currency": "USD"
+   },
+   "buyerName": "Grace Liu",
+   "buyerEmail": "grace.liu@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "tracking-other-order.png",
+   "kind": "tracking-png"
+  },
+  {
+   "name": "invoice-INV-3107.pdf",
+   "kind": "invoice"
+  }
+ ],
+ "gold": {
+  "verdict": "INCOMPLETE",
+  "notAttach": [
+   "tracking-other-order.png"
+  ]
+ }
+}

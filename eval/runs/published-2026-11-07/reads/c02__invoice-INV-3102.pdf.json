@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3102.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Total paid: 64.00 USD",
+    "page": 1,
+    "at": "2026-10-12",
+    "order_ref": "INV-3102",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "64.00",
+    "amount_currency": "USD",
+    "buyer": "Daniel Okafor",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Art print, A3, framed",
+    "page": 1,
+    "at": "2026-10-12",
+    "order_ref": "INV-3102",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Art print, A3, framed",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3102.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3102",
+   "buyer": "Daniel Okafor",
+   "amount": {
+    "value": "64.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-12",
+   "cite": {
+    "docId": "invoice-INV-3102.pdf",
+    "page": 1,
+    "quote": "Total paid: 64.00 USD"
+   }
+  },
+  {
+   "id": "invoice-INV-3102.pdf#2",
+   "kind": "description",
+   "text": "Art print, A3, framed",
+   "cite": {
+    "docId": "invoice-INV-3102.pdf",
+    "page": 1,
+    "quote": "Art print, A3, framed"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0122575,
+ "ms": 10759
+}

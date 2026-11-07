@@ -1,0 +1,45 @@
+{
+ "id": "c26",
+ "title": "Wrong amount: the seller's own invoice says less",
+ "trap": "invoice supports the buyer",
+ "dispute": {
+  "id": "PP-R-EVAL-0026",
+  "reason": "INCORRECT_AMOUNT",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "180.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-21T08:00:00Z",
+  "sellerResponseDue": "2026-11-10T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV267K3M9Q1X4P8W2",
+   "invoiceId": "INV-3126",
+   "createTime": "2026-10-07T08:00:00Z",
+   "amount": {
+    "value": "180.00",
+    "currency": "USD"
+   },
+   "buyerName": "Jack Wilson",
+   "buyerEmail": "jack.wilson@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "invoice-INV-3126.pdf",
+   "kind": "invoice"
+  }
+ ],
+ "gold": {
+  "verdict": "CONFLICT"
+ }
+}

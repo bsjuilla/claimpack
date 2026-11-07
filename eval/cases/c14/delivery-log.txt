@@ -1,0 +1,5 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3114 | Client: Aarav Shah <aarav.shah@example.com>
+05/10 08:45  Link sent to client for album-cover-INV-3114.zip
+05/10 09:30  album-cover-INV-3114.zip downloaded (1 of 1)

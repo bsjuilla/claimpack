@@ -1,0 +1,8 @@
+{
+ "statement": "Order INV-3130 was for Max Turner [F1]. The order amount was 25.00 USD on 15 October 2026 [F1]. Total paid was 25.00 USD [F1].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "Order INV-3130 was for Max Turner (see invoice-INV-3130.pdf). The order amount was 25.00 USD on 15 October 2026 (see invoice-INV-3130.pdf). Total paid was 25.00 USD (see invoice-INV-3130.pdf).",
+ "costUsd": 0.007817
+}

@@ -1,0 +1,45 @@
+{
+ "run": "published-2026-11-07",
+ "cases": 30,
+ "documents": 39,
+ "readerModel": "muse-spark-1.3",
+ "scoredAt": "2026-11-07T08:06:07.841Z",
+ "evalNow": "2026-11-07T12:00:00Z",
+ "allChecks": "28/30",
+ "verdicts": "28/30",
+ "evidenceType": "17/17",
+ "attachments": "29/30",
+ "injectionsCaught": "2/2",
+ "falseQuarantines": 0,
+ "dangerous": 0,
+ "statements": {
+  "drafted": 15,
+  "passedGuard": 15,
+  "firstAttempt": 14
+ },
+ "costUsd": {
+  "reading": 0.3778,
+  "drafting": 0.1088
+ },
+ "failures": [
+  {
+   "id": "c14",
+   "title": "Dates written day-first without a year",
+   "gold": "READY",
+   "got": "NO_DEFENCE",
+   "failed": [
+    "verdict",
+    "attach"
+   ]
+  },
+  {
+   "id": "c23",
+   "title": "Unauthorised: buyer's own message placing the order",
+   "gold": "READY",
+   "got": "CONFLICT",
+   "failed": [
+    "verdict"
+   ]
+  }
+ ]
+}

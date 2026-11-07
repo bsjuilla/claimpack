@@ -1,0 +1,49 @@
+{
+ "docId": "tracking-other-order.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "Delivered",
+    "page": null,
+    "at": "2026-10-17T15:02:00",
+    "order_ref": "INV-2988",
+    "transaction_id": null,
+    "carrier": "FedEx",
+    "tracking_number": "7712 3456 7890",
+    "tracking_status": "delivered",
+    "recipient": "Grace Liu",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "tracking-other-order.png#1",
+   "kind": "tracking",
+   "carrier": "FedEx",
+   "trackingNumber": "7712 3456 7890",
+   "status": "delivered",
+   "at": "2026-10-17T15:02:00",
+   "recipient": "Grace Liu",
+   "orderRef": "INV-2988",
+   "cite": {
+    "docId": "tracking-other-order.png",
+    "quote": "Delivered"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.010935,
+ "ms": 31641
+}

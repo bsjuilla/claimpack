@@ -1,0 +1,48 @@
+{
+ "docId": "delivery-log.txt",
+ "output": {
+  "document_type": "delivery_log",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "delivery",
+    "quote": "portrait-INV-3121.png emailed to client",
+    "page": null,
+    "at": "2026-10-20T10:00:00Z",
+    "order_ref": "INV-3121",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Ella Young <ella.young@example.com>",
+    "delivery_method": "digital",
+    "detail": "portrait-INV-3121.png emailed to client",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Ella Young <ella.young@example.com>",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "delivery-log.txt#1",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-20T10:00:00Z",
+   "detail": "portrait-INV-3121.png emailed to client",
+   "recipient": "Ella Young <ella.young@example.com>",
+   "orderRef": "INV-3121",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "portrait-INV-3121.png emailed to client"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.00732425,
+ "ms": 17857
+}

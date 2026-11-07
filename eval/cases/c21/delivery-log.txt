@@ -1,0 +1,4 @@
+SPECIMEN - SYNTHETIC DOCUMENT
+Studio file delivery log (export)
+Order INV-3121 | Client: Ella Young <ella.young@example.com>
+2026-10-20 10:00 UTC  portrait-INV-3121.png emailed to client

@@ -1,0 +1,49 @@
+{
+ "docId": "refund-confirmation.txt",
+ "output": {
+  "document_type": "refund_record",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "refund",
+    "quote": "We have refunded 48.00 USD to your PayPal account on 27 October 2026.",
+    "page": null,
+    "at": "2026-10-27",
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": "4RF88213AB0012345",
+    "amount_value": "48.00",
+    "amount_currency": "USD",
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "refund-confirmation.txt#1",
+   "kind": "refund",
+   "refundId": "4RF88213AB0012345",
+   "amount": {
+    "value": "48.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-27",
+   "cite": {
+    "docId": "refund-confirmation.txt",
+    "quote": "We have refunded 48.00 USD to your PayPal account on 27 October 2026."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0048955,
+ "ms": 12596
+}

@@ -1,0 +1,66 @@
+{
+ "docId": "chat-screenshot.png",
+ "output": {
+  "document_type": "email_or_chat",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "delivery",
+    "quote": "Hi Lucas, your website mockups are in the shared folder now.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Lucas",
+    "delivery_method": "digital",
+    "detail": "website mockups in the shared folder",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "seller"
+   },
+   {
+    "kind": "acknowledgement",
+    "quote": "Got them, thank you! They look great.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "buyer"
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "chat-screenshot.png#2",
+   "kind": "acknowledgement",
+   "text": "Got them, thank you! They look great.",
+   "cite": {
+    "docId": "chat-screenshot.png",
+    "quote": "Got them, thank you! They look great."
+   }
+  }
+ ],
+ "dropped": [
+  "chat-screenshot.png#1 (delivery): needs a date"
+ ],
+ "costUsd": 0.01498725,
+ "ms": 42034
+}

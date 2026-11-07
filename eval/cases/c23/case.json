@@ -1,0 +1,49 @@
+{
+ "id": "c23",
+ "title": "Unauthorised: buyer's own message placing the order",
+ "trap": "chat as authorisation",
+ "dispute": {
+  "id": "PP-R-EVAL-0023",
+  "reason": "UNAUTHORISED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "150.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-25T08:00:00Z",
+  "sellerResponseDue": "2026-11-14T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV237K3M9Q1X4P8W2",
+   "invoiceId": "INV-3123",
+   "createTime": "2026-10-04T08:00:00Z",
+   "amount": {
+    "value": "150.00",
+    "currency": "USD"
+   },
+   "buyerName": "Nora Ali",
+   "buyerEmail": "nora.ali@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "chat-screenshot.png",
+   "kind": "chat-png"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "OTHER",
+  "attach": [
+   "chat-screenshot.png"
+  ]
+ }
+}

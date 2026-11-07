@@ -1,0 +1,56 @@
+{
+ "id": "c16",
+ "title": "Seller already refunded in full through PayPal",
+ "trap": "refund PayPal confirms",
+ "dispute": {
+  "id": "PP-R-EVAL-0016",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "48.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-26T08:00:00Z",
+  "sellerResponseDue": "2026-11-15T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV167K3M9Q1X4P8W2",
+   "invoiceId": "INV-3116",
+   "createTime": "2026-10-08T08:00:00Z",
+   "amount": {
+    "value": "48.00",
+    "currency": "USD"
+   },
+   "buyerName": "James Patel",
+   "buyerEmail": "james.patel@example.com"
+  }
+ },
+ "refunds": [
+  {
+   "id": "4RF88213AB0012345",
+   "captureId": "EV167K3M9Q1X4P8W2",
+   "amount": {
+    "value": "48.00",
+    "currency": "USD"
+   },
+   "status": "COMPLETED"
+  }
+ ],
+ "docs": [
+  {
+   "name": "refund-confirmation.txt",
+   "kind": "refund-email"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "PROOF_OF_REFUND"
+ }
+}

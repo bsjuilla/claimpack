@@ -140,9 +140,12 @@ export function toFacts(docId: string, out: ReaderOutput): { facts: Fact[]; drop
         if (!s(x.carrier) || !s(x.tracking_number)) return drop("needs a carrier and a tracking number");
         facts.push({ id, kind: "tracking", carrier: s(x.carrier)!, trackingNumber: s(x.tracking_number)!, status: x.tracking_status ?? undefined, at: s(x.at), recipient: s(x.recipient), orderRef: s(x.order_ref) ?? s(x.transaction_id), cite });
         return;
-      case "delivery":
-        if (!s(x.at)) return drop("needs a date");
-        facts.push({ id, kind: "delivery", method: x.delivery_method ?? "physical", at: s(x.at)!, detail: s(x.detail) ?? cite.quote, recipient: s(x.recipient), orderRef: s(x.order_ref) ?? s(x.transaction_id), cite });
+      case "delivery": {
+        // A date without a year ("05/10 08:45") is kept as written; the rules engine resolves it against the payment.
+        const loose = !s(x.at) && /\b\d{1,2}[/.-]\d{1,2}\b/.test(cite.quote) ? cite.quote : undefined;
+        if (!s(x.at) && !loose) return drop("needs a date");
+        facts.push({ id, kind: "delivery", method: x.delivery_method ?? "physical", at: s(x.at) ?? "", atText: loose, detail: s(x.detail) ?? cite.quote, recipient: s(x.recipient), orderRef: s(x.order_ref) ?? s(x.transaction_id), cite });
+      }
         return;
       case "refund":
         if (!s(x.refund_id)) return drop("needs a refund ID");

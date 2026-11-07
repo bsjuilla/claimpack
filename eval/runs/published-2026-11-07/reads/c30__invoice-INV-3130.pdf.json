@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3130.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Total paid: 25.00 USD",
+    "page": 1,
+    "at": "2026-10-15",
+    "order_ref": "INV-3130",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "25.00",
+    "amount_currency": "USD",
+    "buyer": "Max Turner",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Business card design, second design (blue)",
+    "page": 1,
+    "at": "2026-10-15",
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3130.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3130",
+   "buyer": "Max Turner",
+   "amount": {
+    "value": "25.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-15",
+   "cite": {
+    "docId": "invoice-INV-3130.pdf",
+    "page": 1,
+    "quote": "Total paid: 25.00 USD"
+   }
+  },
+  {
+   "id": "invoice-INV-3130.pdf#2",
+   "kind": "description",
+   "text": "Business card design, second design (blue)",
+   "cite": {
+    "docId": "invoice-INV-3130.pdf",
+    "page": 1,
+    "quote": "Business card design, second design (blue)"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.00991025,
+ "ms": 6079
+}

@@ -1,0 +1,82 @@
+{
+ "docId": "posting-receipt.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "AB123456789GB",
+    "page": null,
+    "at": "2026-10-07T12:44",
+    "order_ref": "INV-3117",
+    "transaction_id": null,
+    "carrier": "Royal Mail",
+    "tracking_number": "AB123456789GB",
+    "tracking_status": "delivered",
+    "recipient": "Mia Novak",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "Delivered",
+    "page": null,
+    "at": "2026-10-07T12:44",
+    "order_ref": "INV-3117",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Mia Novak",
+    "delivery_method": "physical",
+    "detail": "Bristol",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "posting-receipt.png#1",
+   "kind": "tracking",
+   "carrier": "Royal Mail",
+   "trackingNumber": "AB123456789GB",
+   "status": "delivered",
+   "at": "2026-10-07T12:44",
+   "recipient": "Mia Novak",
+   "orderRef": "INV-3117",
+   "cite": {
+    "docId": "posting-receipt.png",
+    "quote": "AB123456789GB"
+   }
+  },
+  {
+   "id": "posting-receipt.png#2",
+   "kind": "delivery",
+   "method": "physical",
+   "at": "2026-10-07T12:44",
+   "detail": "Bristol",
+   "recipient": "Mia Novak",
+   "orderRef": "INV-3117",
+   "cite": {
+    "docId": "posting-receipt.png",
+    "quote": "Delivered"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.00980875,
+ "ms": 24834
+}

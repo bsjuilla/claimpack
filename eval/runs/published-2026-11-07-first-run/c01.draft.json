@@ -1,0 +1,8 @@
+{
+ "statement": "Order INV-3101 for Amelia Hart was invoiced on 20 October 2026 for 120.00 USD [F4]. The order was for Logo design, 3 concepts, vector files [F5]. A download link for logo-pack-INV-3101.zip was emailed to the buyer's email address at 09:30 UTC on 20 October 2026 [F2]. logo-pack-INV-3101.zip was downloaded at 10:02 UTC on 20 October 2026 [F3].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "Order INV-3101 for Amelia Hart was invoiced on 20 October 2026 for 120.00 USD (see invoice-INV-3101.pdf). The order was for Logo design, 3 concepts, vector files (see invoice-INV-3101.pdf). A download link for logo-pack-INV-3101.zip was emailed to the buyer's email address at 09:30 UTC on 20 October 2026 (see delivery-log.txt). logo-pack-INV-3101.zip was downloaded at 10:02 UTC on 20 October 2026 (see delivery-log.txt).",
+ "costUsd": 0.00778375
+}

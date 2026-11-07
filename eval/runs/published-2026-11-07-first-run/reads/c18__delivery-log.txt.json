@@ -1,0 +1,79 @@
+{
+ "docId": "delivery-log.txt",
+ "output": {
+  "document_type": "delivery_log",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "delivery",
+    "quote": "2026-10-13 15:00 UTC  Theme file landing-INV-3118.zip emailed",
+    "page": null,
+    "at": "2026-10-13T15:00:00Z",
+    "order_ref": "INV-3118",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": "digital",
+    "detail": "Theme file landing-INV-3118.zip emailed",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Leo Fischer",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "2026-10-13 15:22 UTC  landing-INV-3118.zip downloaded (1 of 1)",
+    "page": null,
+    "at": "2026-10-13T15:22:00Z",
+    "order_ref": "INV-3118",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": "digital",
+    "detail": "landing-INV-3118.zip downloaded (1 of 1)",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Leo Fischer",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "delivery-log.txt#1",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-13T15:00:00Z",
+   "detail": "Theme file landing-INV-3118.zip emailed",
+   "orderRef": "INV-3118",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "2026-10-13 15:00 UTC  Theme file landing-INV-3118.zip emailed"
+   }
+  },
+  {
+   "id": "delivery-log.txt#2",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-13T15:22:00Z",
+   "detail": "landing-INV-3118.zip downloaded (1 of 1)",
+   "orderRef": "INV-3118",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "2026-10-13 15:22 UTC  landing-INV-3118.zip downloaded (1 of 1)"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0092225,
+ "ms": 22329
+}

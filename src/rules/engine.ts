@@ -1,6 +1,7 @@
 // The rules engine: decides, from PayPal's published rules and PayPal's own records, what can be filed for a dispute.
 // It never asks a model anything. Facts come from the reader (with quotes); this code decides what they are worth.
 import type { Check, Cite, DisputeCase, EvidenceDoc, EvidenceType, Fact, Money, PackPlan } from "../types";
+import { resolveLooseDate } from "./dates";
 import { ALLOWED_EVIDENCE, ALLOWED_MIME, MAX_CALL_BYTES, MAX_FILE_BYTES, PROVIDE_EVIDENCE_REL } from "./paypalRules";
 
 /** A refund PayPal itself reports for this payment (looked up by the server, never read from a document). */
@@ -78,8 +79,15 @@ export function planPack(input: EngineInput): PackPlan {
 
   // 2. Which facts belong to this payment? Foreign facts are set aside; contradictions block filing.
   const facts: Fact[] = [];
-  for (const f of input.facts) {
+  for (let f of input.facts) {
     if (!usableDoc(f.cite.docId)) continue;
+    if (f.kind === "delivery" && !f.at) {
+      const at = f.atText ? resolveLooseDate(f.atText, d.transaction.createTime) : undefined;
+      if (!at) continue; // a delivery with no readable date proves nothing
+      add({ id: `date-${f.id}`, label: "Date written without a year", status: "warn", required: false,
+        detail: `${docName(f.cite.docId)} says "${f.atText!.slice(0, 40)}"; ClaimPack read it as ${at.slice(0, 10)}, the reading nearest the payment on ${d.transaction.createTime.slice(0, 10)}. Check it before filing.`, factIds: [f.id] });
+      f = { ...f, at };
+    }
     const order = sameOrder(refOf(f), d.transaction);
     const person = sameBuyer(personOf(f), d.transaction);
     if (order === false || (order === undefined && person === false)) {

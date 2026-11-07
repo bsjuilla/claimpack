@@ -1,0 +1,8 @@
+{
+ "statement": "The order reference was INV-3113 for Chloe Dubois [F1]. The delivery method was digital [F2]. The download link for wedding-invite-INV-3113.pdf was re-sent on 25 October 2026 at 12:00 UTC [F2]. The file wedding-invite-INV-3113.pdf was downloaded (1 of 1) on 25 October 2026 at 13:15 UTC [F3].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The order reference was INV-3113 for Chloe Dubois (see delivery-log.txt). The delivery method was digital (see delivery-log.txt). The download link for wedding-invite-INV-3113.pdf was re-sent on 25 October 2026 at 12:00 UTC (see delivery-log.txt). The file wedding-invite-INV-3113.pdf was downloaded (1 of 1) on 25 October 2026 at 13:15 UTC (see delivery-log.txt).",
+ "costUsd": 0.007177
+}

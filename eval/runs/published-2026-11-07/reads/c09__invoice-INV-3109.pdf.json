@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3109.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Invoice no. INV-3109",
+    "page": 1,
+    "at": "2026-10-19",
+    "order_ref": "INV-3109",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "150.00",
+    "amount_currency": "USD",
+    "buyer": "Hannah Wells",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Presentation template, 40 slides",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3109.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3109",
+   "buyer": "Hannah Wells",
+   "amount": {
+    "value": "150.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-19",
+   "cite": {
+    "docId": "invoice-INV-3109.pdf",
+    "page": 1,
+    "quote": "Invoice no. INV-3109"
+   }
+  },
+  {
+   "id": "invoice-INV-3109.pdf#2",
+   "kind": "description",
+   "text": "Presentation template, 40 slides",
+   "cite": {
+    "docId": "invoice-INV-3109.pdf",
+    "page": 1,
+    "quote": "Presentation template, 40 slides"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.009844,
+ "ms": 7088
+}

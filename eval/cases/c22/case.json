@@ -1,0 +1,47 @@
+{
+ "id": "c22",
+ "title": "Unauthorised: shipped to the account holder",
+ "trap": "none (clean)",
+ "dispute": {
+  "id": "PP-R-EVAL-0022",
+  "reason": "UNAUTHORISED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "79.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-20T08:00:00Z",
+  "sellerResponseDue": "2026-11-09T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV227K3M9Q1X4P8W2",
+   "invoiceId": "INV-3122",
+   "createTime": "2026-10-06T08:00:00Z",
+   "amount": {
+    "value": "79.00",
+    "currency": "USD"
+   },
+   "buyerName": "Ryan Murphy",
+   "buyerEmail": "ryan.murphy@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "tracking.png",
+   "kind": "tracking-png"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "PROOF_OF_FULFILLMENT",
+  "carrier": "FEDEX"
+ }
+}

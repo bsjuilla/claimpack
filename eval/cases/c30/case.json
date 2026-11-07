@@ -1,0 +1,53 @@
+{
+ "id": "c30",
+ "title": "Duplicate charge: two separate orders on two invoices",
+ "trap": "invoice for this payment",
+ "dispute": {
+  "id": "PP-R-EVAL-0030",
+  "reason": "DUPLICATE_TRANSACTION",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "25.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-27T08:00:00Z",
+  "sellerResponseDue": "2026-11-16T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV307K3M9Q1X4P8W2",
+   "invoiceId": "INV-3130",
+   "createTime": "2026-10-15T08:00:00Z",
+   "amount": {
+    "value": "25.00",
+    "currency": "USD"
+   },
+   "buyerName": "Max Turner",
+   "buyerEmail": "max.turner@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "invoice-INV-3130.pdf",
+   "kind": "invoice"
+  },
+  {
+   "name": "invoice-INV-3129B.pdf",
+   "kind": "invoice"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "OTHER",
+  "attach": [
+   "invoice-INV-3130.pdf"
+  ]
+ }
+}

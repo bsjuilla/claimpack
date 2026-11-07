@@ -1,0 +1,45 @@
+{
+ "id": "c05",
+ "title": "Invoice only, nothing showing delivery",
+ "trap": "missing proof",
+ "dispute": {
+  "id": "PP-R-EVAL-0005",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "75.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-29T10:00:00Z",
+  "sellerResponseDue": "2026-11-18T10:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV057K3M9Q1X4P8W2",
+   "invoiceId": "INV-3105",
+   "createTime": "2026-10-21T10:00:00Z",
+   "amount": {
+    "value": "75.00",
+    "currency": "USD"
+   },
+   "buyerName": "Sofia Marin",
+   "buyerEmail": "sofia.marin@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "invoice-INV-3105.pdf",
+   "kind": "invoice"
+  }
+ ],
+ "gold": {
+  "verdict": "INCOMPLETE"
+ }
+}

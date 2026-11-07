@@ -1,0 +1,55 @@
+{
+ "id": "c02",
+ "title": "Physical print, USPS tracking screenshot shows delivered",
+ "trap": "image evidence (carrier page)",
+ "dispute": {
+  "id": "PP-R-EVAL-0002",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "64.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-26T10:00:00Z",
+  "sellerResponseDue": "2026-11-15T10:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV027K3M9Q1X4P8W2",
+   "invoiceId": "INV-3102",
+   "createTime": "2026-10-12T14:00:00Z",
+   "amount": {
+    "value": "64.00",
+    "currency": "USD"
+   },
+   "buyerName": "Daniel Okafor",
+   "buyerEmail": "d.okafor@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "tracking-screenshot.png",
+   "kind": "tracking-png"
+  },
+  {
+   "name": "invoice-INV-3102.pdf",
+   "kind": "invoice"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "PROOF_OF_FULFILLMENT",
+  "attach": [
+   "tracking-screenshot.png",
+   "invoice-INV-3102.pdf"
+  ],
+  "carrier": "USPS"
+ }
+}

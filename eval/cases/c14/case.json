@@ -1,0 +1,49 @@
+{
+ "id": "c14",
+ "title": "Dates written day-first without a year",
+ "trap": "unusual date format",
+ "dispute": {
+  "id": "PP-R-EVAL-0014",
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "stage": "INQUIRY",
+  "status": "WAITING_FOR_SELLER_RESPONSE",
+  "amount": {
+   "value": "70.00",
+   "currency": "USD"
+  },
+  "createTime": "2026-10-20T08:00:00Z",
+  "sellerResponseDue": "2026-11-09T08:00:00.000Z",
+  "actions": [
+   "self",
+   "provide_evidence",
+   "accept_claim",
+   "make_offer",
+   "send_message"
+  ],
+  "transaction": {
+   "id": "EV147K3M9Q1X4P8W2",
+   "invoiceId": "INV-3114",
+   "createTime": "2026-10-05T08:00:00Z",
+   "amount": {
+    "value": "70.00",
+    "currency": "USD"
+   },
+   "buyerName": "Aarav Shah",
+   "buyerEmail": "aarav.shah@example.com"
+  }
+ },
+ "refunds": [],
+ "docs": [
+  {
+   "name": "delivery-log.txt",
+   "kind": "delivery-log"
+  }
+ ],
+ "gold": {
+  "verdict": "READY",
+  "evidenceType": "PROOF_OF_FULFILLMENT",
+  "attach": [
+   "delivery-log.txt"
+  ]
+ }
+}

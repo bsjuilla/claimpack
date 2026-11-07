@@ -1,0 +1,81 @@
+{
+ "docId": "delivery-log.txt",
+ "output": {
+  "document_type": "delivery_log",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "delivery",
+    "quote": "Download link emailed for presentation-template.zip",
+    "page": null,
+    "at": "2026-10-19T09:00:00Z",
+    "order_ref": "INV-3109",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Hannah Wells <hannah.wells@example.com>",
+    "delivery_method": "digital",
+    "detail": "Download link emailed for presentation-template.zip",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Hannah Wells",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "presentation-template.zip downloaded (1 of 1)",
+    "page": null,
+    "at": "2026-10-19T09:20:00Z",
+    "order_ref": "INV-3109",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Hannah Wells <hannah.wells@example.com>",
+    "delivery_method": "digital",
+    "detail": "presentation-template.zip downloaded (1 of 1)",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Hannah Wells",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "delivery-log.txt#1",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-19T09:00:00Z",
+   "detail": "Download link emailed for presentation-template.zip",
+   "recipient": "Hannah Wells <hannah.wells@example.com>",
+   "orderRef": "INV-3109",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "Download link emailed for presentation-template.zip"
+   }
+  },
+  {
+   "id": "delivery-log.txt#2",
+   "kind": "delivery",
+   "method": "digital",
+   "at": "2026-10-19T09:20:00Z",
+   "detail": "presentation-template.zip downloaded (1 of 1)",
+   "recipient": "Hannah Wells <hannah.wells@example.com>",
+   "orderRef": "INV-3109",
+   "cite": {
+    "docId": "delivery-log.txt",
+    "quote": "presentation-template.zip downloaded (1 of 1)"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.01211775,
+ "ms": 32708
+}

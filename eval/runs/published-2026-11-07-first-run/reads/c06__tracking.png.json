@@ -1,0 +1,49 @@
+{
+ "docId": "tracking.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "1Z 999 AA1 01 2345 6784",
+    "page": null,
+    "at": "2026-10-27T06:10:00",
+    "order_ref": "INV-3106",
+    "transaction_id": null,
+    "carrier": "UPS",
+    "tracking_number": "1Z 999 AA1 01 2345 6784",
+    "tracking_status": "shipped",
+    "recipient": "Noah Becker",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "tracking.png#1",
+   "kind": "tracking",
+   "carrier": "UPS",
+   "trackingNumber": "1Z 999 AA1 01 2345 6784",
+   "status": "shipped",
+   "at": "2026-10-27T06:10:00",
+   "recipient": "Noah Becker",
+   "orderRef": "INV-3106",
+   "cite": {
+    "docId": "tracking.png",
+    "quote": "1Z 999 AA1 01 2345 6784"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.00799825,
+ "ms": 18437
+}
