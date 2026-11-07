@@ -235,6 +235,9 @@ function requirementsFor(d: DisputeCase, of: Of, allowed: EvidenceType[]) {
       checks.push({ id: "rec-delivered", label: "Delivery is confirmed and dated", status: delivered.length ? "ok" : "warn", required: false,
         detail: delivered.length ? "A record shows delivery with a date." : "Only a shipment (no confirmed, dated delivery) was found.", factIds: delivered.map((f) => f.id) });
       recLinked(proof);
+      // What was sold: lets PayPal match the delivered files to the order (attached as supporting documents).
+      ok({ id: "rec-what-sold", label: "What was sold (invoice or listing)", required: false, detail: "Shows PayPal that what was delivered is what the buyer paid for." },
+        [...linked(of("invoice")), ...of("description")]);
       return { type: "PROOF_OF_FULFILLMENT" as EvidenceType, checks, used, tracking };
     }
     case "UNAUTHORISED": {

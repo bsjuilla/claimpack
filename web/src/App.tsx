@@ -32,8 +32,13 @@ export function App() {
   const hash = useHash();
   const [toast, setToast] = useState<Toast>(null);
   const [health, setHealth] = useState<{ paypal: string; webhookConfigured: boolean; ai: boolean } | null>(null);
+  const [watch, setWatch] = useState<{ pollSeconds: number; webhook: boolean } | null>(null);
   const show = useCallback((t: Toast) => { setToast(t); if (t) setTimeout(() => setToast((cur) => (cur === t ? null : cur)), t.error ? 7000 : 3500); }, []);
-  useEffect(() => { get<typeof health>("/api/health").then(setHealth).catch(() => setHealth(null)); }, []);
+  useEffect(() => {
+    get<typeof health>("/api/health").then(setHealth).catch(() => setHealth(null));
+    get<typeof watch>("/api/watch").then(setWatch).catch(() => setWatch(null));
+  }, []);
+  const watching = !!watch && (watch.webhook || watch.pollSeconds > 0);
 
   const parts = hash.replace(/^#\//, "").split("/");
   let page;
@@ -52,9 +57,9 @@ export function App() {
           <a href="#/payments" aria-current={section === "payments" ? "page" : undefined}>Payments</a>
         </nav>
         <span className="spacer" />
-        <span className="env" title={health?.webhookConfigured ? "PayPal notifications are connected" : "PayPal notifications are not connected; use Sync with PayPal"}>
-          <span className={`dot${health?.webhookConfigured ? "" : " off"}`} />
-          {health ? (health.paypal === "sandbox" ? "PayPal sandbox" : "PayPal live") : "Server offline"}
+        <span className="env" title={watch?.webhook ? "PayPal sends notifications to ClaimPack" : watch?.pollSeconds ? `ClaimPack checks PayPal every ${watch.pollSeconds} seconds` : "Use Sync with PayPal to check for disputes"}>
+          <span className={`dot${watching ? " live" : " off"}`} />
+          {!health ? "Server offline" : `${watching ? "Watching " : ""}PayPal ${health.paypal === "sandbox" ? "sandbox" : "live"}`}
         </span>
         <SyncButton />
       </header>

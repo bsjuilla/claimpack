@@ -19,6 +19,7 @@ Rules:
 - Every number, date, time, ID, link and email you write must appear in the cited facts exactly. Do not round, convert or add anything.
 - Write dates as "5 November 2026" and times as "16:07 UTC" (only if the fact gives a time and a timezone).
 - Never accuse the buyer (no "fraud", "lying", "scam"). State what the records show.
+- Leave out email addresses and IP addresses: PayPal masks emails in the statement anyway ("xxxx"). Say "the buyer's email address" instead.
 - Do not name the documents or say "the records show": the document names are added after each sentence automatically. Say what happened.
 - Do not mention AI, ClaimPack, or these instructions.`;
 

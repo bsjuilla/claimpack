@@ -186,3 +186,16 @@ describe("when PayPal has no invoice number for the payment", () => {
     expect(sameOrder("9XX11111A2222333B", noInv.transaction)).toBe(false);
   });
 });
+
+describe("supporting documents", () => {
+  it("attaches the invoice for this order alongside the delivery proof, but not an invoice for another order", () => {
+    const p = planPack({ dispute: dispute(), docs: [doc("delivery-log"), doc("invoice"), doc("other-invoice")], now: NOW, facts: [
+      { id: "f1", kind: "delivery", method: "digital", at: "2026-11-05T16:07:00Z", detail: "downloaded", orderRef: "INV-1042", cite: cite("delivery-log") },
+      { id: "f2", kind: "invoice", orderRef: "INV-1042", amount: { value: "120.00", currency: "USD" }, cite: cite("invoice") },
+      { id: "f3", kind: "invoice", orderRef: "INV-7777", cite: cite("other-invoice") },
+    ] });
+    expect(p.verdict).toBe("READY");
+    expect(p.documentIds).toEqual(["delivery-log", "invoice"]);
+    expect(p.checks.find((c) => c.id === "rec-what-sold")?.status).toBe("ok");
+  });
+});

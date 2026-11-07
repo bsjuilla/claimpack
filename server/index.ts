@@ -318,13 +318,39 @@ app.get("/api/stream", (c) => streamSSE(c, async (s) => {
 }));
 app.get("/api/health", (c) => c.json({ ok: true, paypal: pp.base.includes("sandbox") ? "sandbox" : "live", webhookConfigured: !!process.env.PAYPAL_WEBHOOK_ID, ai: !!process.env.META_API_KEY }));
 
+// ---- watching PayPal without a public address: poll the dispute list and sync what changed ----
+// (Webhooks need PayPal to reach this computer; polling does not. Both lead to the same syncDispute.)
+const POLL_SECONDS = Number(process.env.CLAIMPACK_POLL_SECONDS ?? 45);
+let polling = false;
+async function pollPayPal() {
+  if (polling) return;
+  polling = true;
+  try {
+    const list = await pp.listDisputes();
+    let changed = 0;
+    for (const item of list.items ?? []) {
+      const known = store.dispute(item.dispute_id);
+      if (known && known.update_time === item.update_time) continue;
+      await syncDispute(item.dispute_id);
+      broadcast("dispute", item.dispute_id);
+      changed++;
+    }
+    if (changed) { broadcast("disputes"); console.log(`PayPal: ${changed} dispute(s) new or updated`); }
+  } catch (e) { console.error("PayPal poll failed:", (e as Error).message); }
+  finally { polling = false; }
+}
+if (POLL_SECONDS > 0) { setInterval(pollPayPal, POLL_SECONDS * 1000); setTimeout(pollPayPal, 2000); }
+
+app.get("/api/watch", (c) => c.json({ pollSeconds: POLL_SECONDS, webhook: !!process.env.PAYPAL_WEBHOOK_ID }));
+
 // ---- web app ----
 const dist = join(ROOT, "web", "dist");
 if (existsSync(dist)) {
   app.use("/assets/*", serveStatic({ root: "./web/dist" }));
+  app.use("/img/*", serveStatic({ root: "./web/dist" }));
   app.get("*", (c) => c.html(readFileSync(join(dist, "index.html"), "utf8")));
 } else app.get("/", (c) => c.text("Web app not built yet: run npm run web:build"));
 
 serve({ fetch: app.fetch, port: PORT, hostname: HOST }, () => {
-  console.log(`ClaimPack on http://${HOST}:${PORT}  (PayPal ${pp.base.includes("sandbox") ? "sandbox" : "LIVE"}, webhook ${process.env.PAYPAL_WEBHOOK_ID ? "configured" : "not configured"})`);
+  console.log(`ClaimPack on http://${HOST}:${PORT}  (PayPal ${pp.base.includes("sandbox") ? "sandbox" : "LIVE"}, webhook ${process.env.PAYPAL_WEBHOOK_ID ? "configured" : "not configured"}, checking PayPal every ${POLL_SECONDS}s)`);
 });

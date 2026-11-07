@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { post, remove, upload, type DocView } from "./api";
 import { useToast } from "./App";
+import { Cutout } from "./Cutout";
 
 /** The seller's documents for one payment: add, read with AI, and see what each one contributed or why it was set aside. */
 export function Locker({ txId, docs, unread, readPath, onChange }: { txId: string; docs: DocView[]; unread: number; readPath: string; onChange: () => void }) {
@@ -31,8 +32,9 @@ export function Locker({ txId, docs, unread, readPath, onChange }: { txId: strin
   }
 
   return (
-    <section className="panel" aria-labelledby="locker-h">
-      <div className="row" style={{ justifyContent: "space-between", marginBottom: 12 }}>
+    <section className="panel tabbed" aria-labelledby="locker-h">
+      <div className="row locker-head" style={{ justifyContent: "space-between", marginBottom: 12 }}>
+        {docs.length > 0 && unread > 0 && <Cutout name="cut-loupe" />}
         <h2 id="locker-h" style={{ margin: 0 }}>Your documents</h2>
         <button className="btn primary" disabled={!unread || !!busy} onClick={read}>
           {busy === "read" ? "Reading…" : unread ? `Read ${unread} new document${unread === 1 ? "" : "s"}` : "All documents read"}
@@ -42,6 +44,7 @@ export function Locker({ txId, docs, unread, readPath, onChange }: { txId: strin
         onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
         onDrop={(e) => { e.preventDefault(); setOver(false); void add(e.dataTransfer.files); }}>
         <input ref={input} type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.txt,.csv,.log,.eml,.md" onChange={(e) => { if (e.target.files) void add(e.target.files); e.target.value = ""; }} />
+        {!docs.length && <Cutout name="cut-parcel" />}
         {busy === "upload" ? "Adding…" : <>Drop invoices, delivery records, messages or screenshots here, or <u>choose files</u>.<br /><span className="small muted">PDF, images or text. Text files get an exact PDF copy, because PayPal only accepts PDFs and images.</span></>}
       </label>
       {docs.length > 0 && (

@@ -5,6 +5,7 @@ import { get, post, onServerChange, ApiError, type CaseView as Case, type Check,
 import { useToast } from "./App";
 import { gridTheme } from "./grid";
 import { Locker } from "./Locker";
+import { Cutout } from "./Cutout";
 import { EVIDENCE_WORD, KIND_WORD, REASON_LABEL, STAGE_WORD, STATUS_WORD, VERDICT_WORD, day, money, when } from "./words";
 
 export function CaseView({ id }: { id: string }) {
@@ -35,6 +36,7 @@ export function CaseView({ id }: { id: string }) {
             {d.transaction.invoiceId && <span>Invoice <span className="mono">{d.transaction.invoiceId}</span></span>}</div>
         </div>
         <div className="clock">
+          <Cutout name="cut-hourglass" />
           {plan.daysLeft !== undefined ? <>
             <div className={`days${plan.daysLeft <= 3 ? " urgent" : ""}`}>{plan.daysLeft < 0 ? "Deadline passed" : `${plan.daysLeft} day${plan.daysLeft === 1 ? "" : "s"}`}</div>
             <div className="small muted">{plan.daysLeft < 0 ? "" : "left to respond, "}until {day(d.sellerResponseDue)}</div>
@@ -65,8 +67,9 @@ function Pack({ kase }: { kase: Case }) {
   const slots = plan.checks.filter((c) => c.required || c.id.startsWith("rec-"));
   const notices = plan.checks.filter((c) => !slots.includes(c));
   return (
-    <section aria-labelledby="pack-h">
+    <section aria-labelledby="pack-h" className="tabbed">
       <div className={`verdict v-${plan.verdict}`}>
+        <Cutout key={plan.verdict} name={({ READY: "cut-folder-ready", INCOMPLETE: "cut-folder-missing", CONFLICT: "cut-receipts-conflict", NO_DEFENCE: "cut-folder-empty" })[plan.verdict]} />
         <div id="pack-h" className="word">{VERDICT_WORD[plan.verdict]}</div>
         <p className="why">{plan.evidenceType ? <>Filed as <b>{EVIDENCE_WORD[plan.evidenceType]}</b>, the evidence PayPal accepts for this reason. </> : null}{plan.verdict === "READY" ? plan.suggestion ?? "" : plan.suggestion}</p>
         <div className="meter"><div className="track"><div className="fill" style={{ width: `${plan.completeness}%` }} /></div><span>{plan.completeness}% of what PayPal asks for</span></div>
@@ -116,8 +119,11 @@ function Facts({ facts, docs, used }: { facts: Fact[]; docs: Case["docs"]; used:
   if (!facts.length) return null;
   return (
     <section className="section" aria-labelledby="facts-h">
-      <h2 id="facts-h">Everything the documents say</h2>
-      <p className="muted small">Read by Muse Spark. Each line keeps the exact words it came from; the checks above decide which ones count.</p>
+      <div className="facts-head">
+        <Cutout name="cut-receipt-highlight" />
+        <h2 id="facts-h">Everything the documents say</h2>
+        <p className="muted small">Read by Muse Spark. Each line keeps the exact words it came from; the checks above decide which ones count.</p>
+      </div>
       <div className="grid-wrap short"><AgGridReact<Fact> theme={gridTheme()} rowData={facts} columnDefs={cols} getRowId={(p) => p.data.id} /></div>
     </section>
   );

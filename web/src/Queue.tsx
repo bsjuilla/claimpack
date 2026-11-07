@@ -7,6 +7,9 @@ import { REASON_LABEL, STATUS_WORD, day, daysLeft, money } from "./words";
 
 export function Queue() {
   const [rows, setRows] = useState<DisputeRow[] | null>(null);
+  // The desk photograph is optional: use it only if it has been added to web/public/img.
+  const [photo, setPhoto] = useState(false);
+  useEffect(() => { const i = new Image(); i.onload = () => setPhoto(true); i.src = "/img/hero-desk.webp"; }, []);
   useEffect(() => {
     const load = () => get<DisputeRow[]>("/api/disputes").then(setRows).catch(() => setRows([]));
     load();
@@ -30,12 +33,24 @@ export function Queue() {
     { headerName: "Dispute", width: 190, field: "id", cellClass: "mono" },
   ], []);
 
+  const waiting = (rows ?? []).filter((r) => r.canFile);
+  const next = waiting.map((r) => daysLeft(r.due)).filter((d): d is number => d !== null).sort((a, b) => a - b)[0];
+  const byCurrency = new Map<string, number>();
+  for (const r of rows ?? []) if (r.status !== "RESOLVED") byCurrency.set(r.currency, (byCurrency.get(r.currency) ?? 0) + Number(r.amount));
+
   return (
     <>
-      <div className="head">
-        <div>
+      <div className={`desk${photo ? " has-photo" : ""}`}>
+        <div className="inner">
           <h1>Disputes</h1>
           <p className="lede">Each dispute PayPal has opened on your payments, soonest deadline first. Open one to see what PayPal needs from you and what your documents already prove.</p>
+          {rows && rows.length > 0 && (
+            <div className="figures">
+              <div><b>{[...byCurrency].map(([c, v]) => money(String(v), c)).join(" + ") || "0.00"}</b><span>in open disputes</span></div>
+              <div><b>{waiting.length}</b><span>waiting for your evidence</span></div>
+              <div><b className={next !== undefined && next <= 3 ? "urgent" : undefined}>{next === undefined ? "None" : next < 0 ? "Passed" : `${next} day${next === 1 ? "" : "s"}`}</b><span>to the next deadline</span></div>
+            </div>
+          )}
         </div>
       </div>
       {rows && rows.length === 0 ? (

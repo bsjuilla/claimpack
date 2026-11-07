@@ -175,3 +175,44 @@ pre.request { font: 400 12.5px/1.55 var(--mono); background: var(--sunk); border
 .status-pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12.5px; font-weight: 600; line-height: 20px; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ---- photo-led layer: cut-out objects (web/public/img) that sit on and break out of panels ---- */
+.cutout { pointer-events: none; user-select: none; filter: drop-shadow(0 14px 18px rgba(24, 33, 47, 0.18)) drop-shadow(0 2px 3px rgba(24, 33, 47, 0.12)); }
+@media (prefers-color-scheme: dark) { .cutout { filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.55)); } }
+
+.verdict { position: relative; }
+.verdict:has(> .cutout) { padding-right: 190px; }
+.verdict .cutout { position: absolute; right: 8px; top: -34px; width: 176px; transform: rotate(4deg); }
+@media (max-width: 700px) { .verdict { padding-right: 24px; } .verdict .cutout { width: 104px; top: -26px; right: 4px; opacity: 0.9; } }
+
+.clock { position: relative; display: grid; grid-template-columns: auto auto; gap: 0 14px; align-items: center; justify-content: end; }
+.clock .cutout { grid-row: span 3; width: 58px; transform: rotate(-6deg); }
+.clock > :not(.cutout) { grid-column: 2; }
+
+.locker-head { position: relative; }
+.locker-head .cutout { position: absolute; right: -6px; top: -54px; width: 92px; transform: rotate(-7deg); }
+.drop .cutout { display: block; width: 120px; margin: -6px auto 6px; transform: rotate(-4deg); }
+.facts-head { position: relative; }
+.facts-head:has(> .cutout) { padding-right: 220px; }
+.facts-head .cutout { position: absolute; right: 0; top: -40px; width: 210px; transform: rotate(-3deg); }
+@media (max-width: 700px) { .facts-head { padding-right: 0; } .facts-head .cutout { display: none; } }
+
+/* Disputes page band: the desk photograph, with the heading and the figures on its calm left half */
+.desk { position: relative; border-radius: var(--r-2); overflow: hidden; margin: -8px 0 28px; min-height: 250px; display: flex; align-items: flex-end;
+  background: var(--sunk) center right / cover no-repeat; border: 1px solid var(--line); }
+.desk.has-photo { background-image: linear-gradient(90deg, var(--paper) 0%, color-mix(in srgb, var(--paper) 88%, transparent) 38%, transparent 62%), url("/img/hero-desk.webp"); }
+.desk .inner { padding: 30px 32px; max-width: 640px; }
+.desk h1 { font-size: 34px; }
+.desk .lede { color: var(--ink-2); margin-top: 8px; max-width: 54ch; }
+.figures { display: flex; gap: 34px; margin-top: 22px; flex-wrap: wrap; }
+.figures div { display: grid; gap: 2px; }
+.figures b { font-size: 24px; letter-spacing: -0.02em; font-weight: 700; }
+.figures span { font-size: 13px; color: var(--ink-2); }
+.figures b.urgent { color: var(--conflict); }
+
+/* the manila tab: marks the evidence sections like the tab of a case folder */
+.tabbed { position: relative; }
+.tabbed::before { content: ""; position: absolute; left: 22px; top: -7px; width: 64px; height: 8px; border-radius: 4px 4px 0 0; background: #e3c78f; }
+@media (prefers-color-scheme: dark) { .tabbed::before { background: #8a7446; } }
+.env .dot.live { background: var(--ready); box-shadow: 0 0 0 0 color-mix(in srgb, var(--ready) 55%, transparent); animation: pulse 2.4s ease-out infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ready) 50%, transparent); } 100% { box-shadow: 0 0 0 8px transparent; } }
