@@ -30,6 +30,8 @@ export class Store {
       CREATE TABLE IF NOT EXISTS reads (doc_id TEXT PRIMARY KEY, facts TEXT NOT NULL, dropped TEXT NOT NULL, doc_type TEXT, quarantine_quote TEXT, cost_usd REAL, read_at TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS filings (id INTEGER PRIMARY KEY AUTOINCREMENT, dispute_id TEXT NOT NULL, approved_by TEXT NOT NULL, request TEXT NOT NULL,
         files TEXT NOT NULL, response TEXT, status INTEGER, at TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS trackers (tx_id TEXT NOT NULL, fact_id TEXT NOT NULL, carrier TEXT NOT NULL, tracking_number TEXT NOT NULL, status INTEGER, response TEXT, at TEXT NOT NULL, PRIMARY KEY (tx_id, tracking_number));
+      CREATE TABLE IF NOT EXISTS settlements (id INTEGER PRIMARY KEY AUTOINCREMENT, dispute_id TEXT NOT NULL, action TEXT NOT NULL, approved_by TEXT NOT NULL, request TEXT NOT NULL, response TEXT, status INTEGER, at TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, type TEXT, verified INTEGER, received_at TEXT NOT NULL, raw TEXT);
     `);
   }
@@ -79,6 +81,20 @@ export class Store {
     return r && { docId: r.doc_id, facts: JSON.parse(r.facts), dropped: JSON.parse(r.dropped), docType: r.doc_type, quarantineQuote: r.quarantine_quote ?? undefined, costUsd: r.cost_usd, readAt: r.read_at };
   }
 
+  addTracker(t: { txId: string; factId: string; carrier: string; trackingNumber: string; status: number; response: unknown }) {
+    this.db.prepare("INSERT INTO trackers (tx_id, fact_id, carrier, tracking_number, status, response, at) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(tx_id, tracking_number) DO UPDATE SET status = excluded.status, response = excluded.response, at = excluded.at")
+      .run(t.txId, t.factId, t.carrier, t.trackingNumber, t.status, JSON.stringify(t.response ?? null), new Date().toISOString());
+  }
+  trackers(txId: string): { factId: string; carrier: string; trackingNumber: string; status: number; at: string }[] {
+    return (this.db.prepare("SELECT fact_id AS factId, carrier, tracking_number AS trackingNumber, status, at FROM trackers WHERE tx_id = ? ORDER BY at").all(txId) as any[]);
+  }
+  addSettlement(s: { disputeId: string; action: string; approvedBy: string; request: unknown; response: unknown; status: number }) {
+    this.db.prepare("INSERT INTO settlements (dispute_id, action, approved_by, request, response, status, at) VALUES (?, ?, ?, ?, ?, ?, ?)")
+      .run(s.disputeId, s.action, s.approvedBy, JSON.stringify(s.request), JSON.stringify(s.response ?? null), s.status, new Date().toISOString());
+  }
+  settlements(disputeId: string): { action: string; approved_by: string; request: any; status: number; at: string }[] {
+    return (this.db.prepare("SELECT action, approved_by, request, status, at FROM settlements WHERE dispute_id = ? ORDER BY id").all(disputeId) as any[]).map((r) => ({ ...r, request: JSON.parse(r.request) }));
+  }
   addFiling(f: { disputeId: string; approvedBy: string; request: unknown; files: { name: string; sha256: string; bytes: number }[]; response: unknown; status: number }) {
     this.db.prepare("INSERT INTO filings (dispute_id, approved_by, request, files, response, status, at) VALUES (?, ?, ?, ?, ?, ?, ?)")
       .run(f.disputeId, f.approvedBy, JSON.stringify(f.request), JSON.stringify(f.files), JSON.stringify(f.response), f.status, new Date().toISOString());

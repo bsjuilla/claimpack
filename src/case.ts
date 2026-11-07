@@ -51,6 +51,7 @@ export async function buildCase(store: Store, pp: PayPal, disputeId: string, opt
     held: held.length ? { amount: held.reduce((s, r) => s + Number(r.amount.value), 0).toFixed(2), currency: held[0].amount.currency } : null,
     refunds,
     filings: store.filings(disputeId),
+    settlements: store.settlements(disputeId),
   };
 }
 

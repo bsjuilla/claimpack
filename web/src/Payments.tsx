@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
-import { get, post, onServerChange, type DocView, type PaymentRow } from "./api";
+import { get, post, onServerChange, type DocView, type Fact, type PaymentRow } from "./api";
 import { useToast } from "./App";
 import { gridTheme } from "./grid";
 import { Locker } from "./Locker";
@@ -72,7 +72,7 @@ function TestSale() {
 }
 
 export function PaymentLocker({ txId }: { txId: string }) {
-  const [data, setData] = useState<{ payment: PaymentRow; disputeId: string | null; docs: DocView[] } | null>(null);
+  const [data, setData] = useState<{ payment: PaymentRow & { orderId?: string | null }; disputeId: string | null; docs: DocView[]; tracking: Fact[]; trackers: { factId: string; carrier: string; trackingNumber: string; status: number; at: string }[] } | null>(null);
   const load = useCallback(() => get<typeof data>(`/api/payments/${encodeURIComponent(txId)}`).then(setData), [txId]);
   useEffect(() => { void load(); return onServerChange((m) => { if (m.what !== "disputes") void load(); }); }, [load]);
   if (!data) return <p className="muted">Loading…</p>;
@@ -90,7 +90,37 @@ export function PaymentLocker({ txId }: { txId: string }) {
         {data.disputeId ? <a className="btn primary" href={`#/disputes/${encodeURIComponent(data.disputeId)}`}>Open the dispute on this payment</a>
           : <span className="small muted">No dispute on this payment. Anything you add now is ready if one comes.</span>}
       </div>
+      {data.tracking.length > 0 && <Tracking txId={p.txId} canSend={!!p.orderId} facts={data.tracking} sent={data.trackers} onChange={load} />}
       <Locker txId={p.txId} docs={data.docs} unread={data.docs.filter((d) => !d.read).length} readPath={`/api/payments/${encodeURIComponent(p.txId)}/read`} onChange={load} />
     </>
+  );
+}
+
+/** Tracking found in the seller's documents, and whether PayPal has it on the order. */
+function Tracking({ txId, canSend, facts, sent, onChange }: { txId: string; canSend: boolean; facts: Fact[]; sent: { trackingNumber: string; status: number; at: string }[]; onChange: () => void }) {
+  const toast = useToast();
+  const [busy, setBusy] = useState("");
+  const rows = facts.filter((f): f is Extract<Fact, { kind: "tracking" }> => f.kind === "tracking");
+  return (
+    <section className="panel" style={{ marginBottom: 20 }} aria-labelledby="track-h">
+      <h3 id="track-h" style={{ marginBottom: 6 }}>Tracking on this payment</h3>
+      <p className="small muted" style={{ marginBottom: 12 }}>PayPal looks for tracking on the order itself: it can release funds PayPal is holding and supports a Seller Protection claim later. ClaimPack sends the carrier and number from your documents; it does not email the buyer.</p>
+      {rows.map((f) => {
+        const done = sent.find((s) => s.trackingNumber === f.trackingNumber.replace(/\s+/g, "") && s.status < 300);
+        return (
+          <div key={f.id} className="row" style={{ justifyContent: "space-between", gap: 12, padding: "8px 0", borderTop: "1px solid var(--line)" }}>
+            <span><b>{f.carrier}</b> <span className="mono">{f.trackingNumber}</span>{f.status ? <span className="muted"> · {f.status}</span> : null}</span>
+            {done ? <span className="small passed">PayPal has it ({day(done.at)})</span>
+              : canSend ? <button className="btn" disabled={busy !== ""} onClick={async () => {
+                  setBusy(f.id);
+                  try { await post(`/api/payments/${encodeURIComponent(txId)}/tracking`, { factId: f.id }); toast({ text: "Tracking added to the PayPal order." }); onChange(); }
+                  catch (e) { toast({ text: (e as Error).message, error: true }); }
+                  finally { setBusy(""); }
+                }}>{busy === f.id ? "Sending…" : "Send to PayPal"}</button>
+              : <span className="small muted">Add it in PayPal's Activity page (ClaimPack does not know this payment's order).</span>}
+          </div>
+        );
+      })}
+    </section>
   );
 }

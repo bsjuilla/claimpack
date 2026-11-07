@@ -56,6 +56,25 @@ export class DemoPayPal {
   async verifyWebhook() { return false; }
   async call(): Promise<never> { throw new Error("Demo mode has no PayPal account: test sales need sandbox keys (see README, Run it)."); }
 
+  /** Offer a refund (inquiry stage only) or accept the claim, as the Disputes API does. */
+  async makeOffer(id: string, body: { note: string; offer_amount: { value: string; currency_code: string }; offer_type: string }) {
+    const d = this.disputes.get(id);
+    if (!d?.links.some((l) => l.rel === "make_offer")) throw demoRefusal("NOT_AUTHORIZED", "make_offer is not available on this dispute.");
+    if (!(Number(body.offer_amount.value) > 0) || Number(body.offer_amount.value) > Number(d.dispute_amount.value)) throw demoRefusal("INVALID_PARAMETER_VALUE", "offer_amount");
+    d.status = "WAITING_FOR_BUYER_RESPONSE";
+    d.links = d.links.filter((l) => !["make_offer", "provide_evidence"].includes(l.rel));
+    d.update_time = new Date().toISOString();
+    return { links: [] };
+  }
+  async acceptClaim(id: string, _note: string) {
+    const d = this.disputes.get(id);
+    if (!d?.links.some((l) => l.rel === "accept_claim")) throw demoRefusal("NOT_AUTHORIZED", "accept_claim is not available on this dispute.");
+    d.status = "RESOLVED";
+    d.links = d.links.filter((l) => l.rel === "self");
+    d.update_time = new Date().toISOString();
+    return { links: [] };
+  }
+
   /** Checks the multipart request as PayPal's provide-evidence does, then records it on the dispute. */
   async provideEvidence(id: string, form: FormData) {
     const d = this.disputes.get(id);

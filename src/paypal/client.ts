@@ -61,6 +61,7 @@ export class PayPal {
   getCapture(id: string) { return this.call("show capture", `/v2/payments/captures/${encodeURIComponent(id)}`); }
   getOrder(id: string) { return this.call("show order", `/v2/checkout/orders/${encodeURIComponent(id)}`); }
   provideEvidence(id: string, form: FormData) { return this.call("provide evidence", `/v1/customer/disputes/${encodeURIComponent(id)}/provide-evidence`, { form }); }
+  makeOffer(id: string, body: { note: string; offer_amount: { currency_code: string; value: string }; offer_type: "REFUND" }) { return this.call("make offer", `/v1/customer/disputes/${encodeURIComponent(id)}/make-offer`, { json: body }); }
   acceptClaim(id: string, note: string) { return this.call("accept claim", `/v1/customer/disputes/${encodeURIComponent(id)}/accept-claim`, { json: { note } }); }
 
   /** Refunds PayPal itself records against a capture (via its order). Documents never supply these. */

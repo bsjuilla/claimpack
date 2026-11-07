@@ -22,13 +22,14 @@ Chargeback agencies do this for large merchants and keep about a quarter of what
 
 ## What ClaimPack does
 
-1. **Keeps the proof when you are paid.** Every payment gets an evidence locker: the invoice, the delivery log, the buyer's messages. One click has Muse Spark read them, so a dispute arrives with its evidence already in place.
+1. **Keeps the proof when you are paid.** Every payment gets an evidence locker: the invoice, the delivery log, the buyer's messages. One click has Muse Spark read them, so a dispute arrives with its evidence already in place. Tracking found in those documents can be sent to the PayPal order itself (Orders v2 *add tracking*), where PayPal looks for it before any dispute.
 2. **Notices the dispute.** ClaimPack watches PayPal (it checks the dispute list every 45 seconds; PayPal's signed webhooks are supported when PayPal can reach the server) and opens the case with PayPal's deadline, the buyer's words, and the money PayPal is holding.
 3. **Reads every document.** Muse Spark 1.3 reads PDFs, photos and screenshots and returns facts, each with **the exact words it came from**. A document that contains instructions aimed at an AI is set aside, and the seller sees the text.
 4. **Decides with PayPal's rules, not with the model.** A tested rules engine applies PayPal's published *reasons and evidence* table, the dispute's stage and the actions PayPal currently allows, and checks every fact against PayPal's own records: the order number, the buyer, the amount charged, refunds PayPal really issued, the deadline. Its verdict is one of **Ready to file**, **Something PayPal needs is missing** (and exactly what), **The evidence contradicts itself**, or **Nothing here PayPal would accept** (refunding is likely cheaper).
 5. **Says whether Seller Protection is likely to apply.** Meeting PayPal's evidence rules and being covered by Seller Protection are different tests, so ClaimPack shows both. For example, item-not-received on a physical order needs a *delivered* status and date; a digital order needs a dated record of access; *not as described* and card-issuer claims are not covered at all. It is a label with reasons, not a prediction.
 6. **Drafts the statement, then checks it.** Muse Spark writes a short, factual statement from the facts the engine chose. Code rejects any sentence that cites nothing. It also rejects any number, date, time, link, email, name, quotation or claim word (*confirmed*, *received*, *agreed*, *refunded*…) that the cited documents do not contain, and any accusation against the buyer. At approval each sentence is shown beside the exact words it cites.
-7. **A person approves, then ClaimPack files.** The seller sees the exact request PayPal will receive, types their name and confirms. ClaimPack re-checks everything on the server (the pack must still be the one they reviewed), sends the evidence through `provide-evidence` with a generated evidence-summary PDF, reads the dispute back and logs what was sent, by whom, with file fingerprints.
+7. **Or settles it.** When the evidence will not carry the claim, ClaimPack shows PayPal's own alternatives on that dispute, offering a refund or accepting the claim, with the same named approval.
+8. **A person approves, then ClaimPack files.** The seller sees the exact request PayPal will receive, types their name and confirms. ClaimPack re-checks everything on the server (the pack must still be the one they reviewed), sends the evidence through `provide-evidence` with a generated evidence-summary PDF, reads the dispute back and logs what was sent, by whom, with file fingerprints.
 
 ## Proof it works against PayPal (sandbox, 7 November 2026)
 
@@ -96,7 +97,7 @@ Because those fixes were made after seeing the test, the second column is not a 
 
 ## Reviewed from five angles
 
-Before submitting, the project went to five independent reviewers, each with one brief: hackathon judges, an adversary trying to make it file something false, a PayPal disputes specialist, small sellers, and a presentation critic. Their attacks became tests. **117 tests now pass**, including the reviewers' own cases in `tests/review/`: forged refund IDs, another buyer's tracking, failed deliveries, ambiguous dates, invented quotations, claim words the documents never support, and oversized or misnamed files.
+Before submitting, the project went to five independent reviewers, each with one brief: hackathon judges, an adversary trying to make it file something false, a PayPal disputes specialist, small sellers, and a presentation critic. Their attacks became tests. **120 tests now pass**, including the reviewers' own cases in `tests/review/`: forged refund IDs, another buyer's tracking, failed deliveries, ambiguous dates, invented quotations, claim words the documents never support, and oversized or misnamed files.
 
 What changed because of them:
 - the Seller Protection label;
@@ -138,7 +139,7 @@ git clone https://github.com/bsjuilla/claimpack.git
 cd claimpack
 npm install
 cp .env.example .env      # then add your PayPal sandbox client ID and secret, and META_API_KEY
-npm test                  # 117 tests: rules engine, statement guard, PayPal parsing, reviewers' attacks, demo
+npm test                  # 120 tests: rules engine, statement guard, PayPal parsing, reviewers' attacks, demo
 npm run app               # builds the web app and starts http://127.0.0.1:8790
 ```
 
@@ -170,6 +171,7 @@ To re-run the evaluation live (about $1 of Meta API credit): `npx tsx scripts/ev
 - The Seller Protection label follows PayPal's published policy. It is not PayPal's decision and can be wrong where the policy leaves things to PayPal.
 - Everything here is sandbox or synthetic. ClaimPack measures whether a pack meets PayPal's published rules; it cannot measure whether PayPal will decide in the seller's favour, and it does not claim to.
 - Documents are uploaded or dropped in; there is no inbox integration.
+- Sending tracking and settling (offer a refund, accept the claim) are tested against the simulated PayPal and unit tests, not yet against the PayPal sandbox.
 - The evaluation set was written by the builder, so it shares the builder's blind spots. Its failures are listed above, not hidden.
 - PayPal's sandbox accepted one evidence filing per dispute stage in our tests; ClaimPack treats every filing as final.
 

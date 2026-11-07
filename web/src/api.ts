@@ -46,6 +46,7 @@ export interface CaseView {
   planHash: string;
   held: { amount: string; currency: string } | null;
   filings: { id: number; approved_by: string; at: string; status: number; files: { name: string; bytes: number; sha256: string }[]; request: any; response: any }[];
+  settlements: { action: string; approved_by: string; request: any; status: number; at: string }[];
 }
 
 export interface StatementCheck { ok: boolean; problems: { sentence: string; problem: string }[]; notes: string }

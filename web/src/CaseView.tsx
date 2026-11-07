@@ -55,6 +55,7 @@ export function CaseView({ id }: { id: string }) {
       </div>
 
       <Facts facts={kase.facts} docs={kase.docs} used={plan.usedFactIds} />
+      <Settle kase={kase} id={id} onDone={setKase} />
       <Filing kase={kase} id={id} onFiled={setKase} />
     </>
   );
@@ -256,4 +257,48 @@ function readAs(f: Fact): string {
   const { id: _i, kind: _k, cite: _c, ...rest } = f as Record<string, unknown>;
   return Object.values(rest).flatMap((v) => (v && typeof v === "object" ? Object.values(v as object) : [v]))
     .filter((v) => v !== undefined && v !== null && v !== "").map(String).join(", ");
+}
+
+/** Settling instead of fighting: offer a refund (inquiry stage) or accept the claim. Shown when PayPal allows it. */
+function Settle({ kase, id, onDone }: { kase: Case; id: string; onDone: (c: Case) => void }) {
+  const toast = useToast();
+  const d = kase.dispute;
+  const [open, setOpen] = useState(kase.plan.verdict === "NO_DEFENCE");
+  const [action, setAction] = useState<"make_offer" | "accept_claim">(d.actions.includes("make_offer") ? "make_offer" : "accept_claim");
+  const [amount, setAmount] = useState(d.amount.value);
+  const [note, setNote] = useState("");
+  const [name, setName] = useState("");
+  const [sure, setSure] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const done = kase.settlements.filter((s) => s.status === 200);
+  const can = { make_offer: d.actions.includes("make_offer"), accept_claim: d.actions.includes("accept_claim") };
+  if (!done.length && !can.make_offer && !can.accept_claim) return null;
+  return (
+    <section className="section" aria-labelledby="settle-h">
+      <div className="row" style={{ justifyContent: "space-between" }}>
+        <h2 id="settle-h">Or settle it</h2>
+        {!done.length && <button className="btn link small" onClick={() => setOpen(!open)}>{open ? "Hide" : "Show the options"}</button>}
+      </div>
+      {done.map((s, i) => <div key={i} className="filed">{s.action === "make_offer" ? <>Offered a refund of <b>{money(s.request.offer_amount?.value, s.request.offer_amount?.currency_code)}</b></> : <b>Accepted the claim</b>}{DEMO ? " (simulated, demo mode)" : ""} on {new Date(s.at).toLocaleString("en-GB")}, approved by {s.approved_by}.</div>)}
+      {open && !done.length && <div className="panel" style={{ marginTop: 12 }}>
+        <p className="small" style={{ marginBottom: 12 }}>{kase.plan.verdict === "NO_DEFENCE" ? "Nothing in your documents is evidence PayPal accepts for this reason. " : ""}These are PayPal's own options on this dispute. Both are final once sent.</p>
+        <div className="row" style={{ gap: 16, marginBottom: 12 }}>
+          {can.make_offer && <label className="check"><input type="radio" name="settle" checked={action === "make_offer"} onChange={() => setAction("make_offer")} />Offer a refund. The buyer can accept it, which closes the dispute, or decline it.</label>}
+          {can.accept_claim && <label className="check"><input type="radio" name="settle" checked={action === "accept_claim"} onChange={() => setAction("accept_claim")} />Accept the claim. PayPal refunds the buyer {money(d.amount.value, d.amount.currency)} from your balance and closes the dispute.</label>}
+        </div>
+        {action === "make_offer" && <label style={{ display: "grid", gap: 6, fontSize: 14, maxWidth: 220, marginBottom: 12 }}>Refund amount ({d.amount.currency})<input type="text" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} /></label>}
+        <label style={{ display: "grid", gap: 6, fontSize: 14, marginBottom: 12 }}>Note to the buyer (PayPal shows it to them)<textarea style={{ minHeight: 80 }} value={note} onChange={(e) => setNote(e.target.value)} /></label>
+        <div className="row" style={{ alignItems: "flex-end", gap: 20 }}>
+          <label style={{ display: "grid", gap: 6, fontSize: 14 }}>Approved by<input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" /></label>
+          <label className="check"><input type="checkbox" checked={sure} onChange={(e) => setSure(e.target.checked)} />I understand this is sent to PayPal and cannot be taken back.</label>
+          <button className="btn primary" disabled={busy || !sure || name.trim().length < 2 || note.trim().length < 2} onClick={async () => {
+            setBusy(true);
+            try { const r = await post<{ case: Case }>(`/api/disputes/${encodeURIComponent(id)}/settle`, { action, amount, note, approvedBy: name }); onDone(r.case); toast({ text: DEMO ? "Sent to the simulated PayPal (demo mode)." : "Sent to PayPal." }); }
+            catch (e) { toast({ text: (e as Error).message, error: true }); }
+            finally { setBusy(false); }
+          }}>{busy ? "Sending…" : action === "make_offer" ? "Send the offer" : "Accept the claim"}</button>
+        </div>
+      </div>}
+    </section>
+  );
 }

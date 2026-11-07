@@ -387,10 +387,18 @@ function requirementsFor(d: DisputeCase, of: Of, allowed: EvidenceType[]) {
   }
 }
 
-function trackingInfo(f: Extract<Fact, { kind: "tracking" }>) {
+export function trackingInfo(f: Extract<Fact, { kind: "tracking" }>) {
   const known = ["UPS", "USPS", "FEDEX", "DHL"];
   const c = f.carrier.trim().toUpperCase().replace(/\s+/g, "_");
   return known.includes(c) ? { carrier_name: c, tracking_number: f.trackingNumber } : { carrier_name: "OTHER", carrier_name_other: f.carrier.trim(), tracking_number: f.trackingNumber };
+}
+
+/** The body of PayPal's Orders v2 "add tracking" call (POST /v2/checkout/orders/{id}/track) for one tracking fact.
+ * The buyer is not emailed by ClaimPack (notify_payer false): the seller decides whether to tell them. */
+export function trackerBody(captureId: string, f: Extract<Fact, { kind: "tracking" }>) {
+  const t = trackingInfo(f);
+  return { capture_id: captureId, tracking_number: t.tracking_number.replace(/\s+/g, ""), carrier: t.carrier_name,
+    ...("carrier_name_other" in t ? { carrier_name_other: t.carrier_name_other } : {}), notify_payer: false };
 }
 
 /** The citation helper the UI and the statement guard share. */

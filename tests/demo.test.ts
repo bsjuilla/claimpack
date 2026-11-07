@@ -56,6 +56,18 @@ describe("demo mode (npm run demo)", () => {
     await expect(pp.provideEvidence(id, evidenceForm(input, files))).rejects.toSatisfy(isDemoRefusal);
   });
 
+  it("settling: an offer above the disputed amount is refused; a valid offer and accepting a claim close the options", async () => {
+    const offerId = [...caseOf].find(([, c]) => c === "c15")![0];
+    const amount = (await pp.getDispute(offerId)).dispute_amount.value;
+    await expect(pp.makeOffer(offerId, { note: "Sorry", offer_amount: { value: (Number(amount) + 1).toFixed(2), currency_code: "USD" }, offer_type: "REFUND" })).rejects.toSatisfy(isDemoRefusal);
+    await pp.makeOffer(offerId, { note: "Sorry", offer_amount: { value: amount, currency_code: "USD" }, offer_type: "REFUND" });
+    expect((await pp.getDispute(offerId)).links.map((l: { rel: string }) => l.rel)).not.toContain("make_offer");
+    const acceptId = [...caseOf].find(([, c]) => c === "c24")![0];
+    await pp.acceptClaim(acceptId, "Refunding.");
+    expect((await pp.getDispute(acceptId)).status).toBe("RESOLVED");
+    await expect(pp.acceptClaim(acceptId, "again")).rejects.toSatisfy(isDemoRefusal);
+  });
+
   it("refuses a file type PayPal does not accept", async () => {
     const id = [...caseOf].find(([, c]) => c === "c13")![0];
     const fd = new FormData();

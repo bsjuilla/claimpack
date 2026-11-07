@@ -15,6 +15,8 @@ import { loadEnv, PayPal, PayPalError } from "../src/paypal/client";
 import { summaryPdf, textToPdf } from "../src/pdf/pdfs";
 import { checkStatement } from "../src/rules/statement";
 import { DATA, Store } from "../src/store";
+import { trackerBody } from "../src/rules/engine";
+import type { Fact } from "../src/types";
 import { DEMO_NOW, DemoPayPal, isDemoRefusal, savedDraft, seedDemo } from "../src/demo/demo";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -115,7 +117,8 @@ app.get("/api/payments/:txId", (c) => {
   const txId = c.req.param("txId");
   if (!TX_ID.test(txId)) return c.json({ error: "Bad transaction id." }, 400);
   const disputeId = store.disputes().find((d) => d.disputed_transactions?.[0]?.seller_transaction_id === txId)?.dispute_id ?? null;
-  return c.json({ payment: store.payment(txId) ?? { txId }, disputeId,
+  const tracking = store.docs(txId).filter((d) => !d.quarantined).flatMap((d) => (store.read(d.id)?.facts ?? []).filter((f) => f.kind === "tracking"));
+  return c.json({ payment: store.payment(txId) ?? { txId }, disputeId, tracking, trackers: store.trackers(txId),
     docs: store.docs(txId).map((d) => ({ ...engineDoc(d), originalName: d.name, originalMime: d.mime, addedAt: d.addedAt, read: store.read(d.id) ?? null })) });
 });
 
@@ -262,6 +265,40 @@ app.post("/api/disputes/:id/file", async (c) => {
   } catch (e) { return fail(c, e); }
 });
 
+// ---- settling instead: offer a refund or accept the claim. Same rules as filing: fresh from PayPal, named approval. ----
+app.post("/api/disputes/:id/settle", async (c) => {
+  const id = c.req.param("id");
+  if (!DISPUTE_ID.test(id)) return c.json({ error: "Bad dispute id." }, 400);
+  try {
+    const b = await c.req.json<{ action: "make_offer" | "accept_claim"; amount?: string; note: string; approvedBy: string }>();
+    if (!b.approvedBy?.trim()) return c.json({ error: "Type your name to approve." }, 400);
+    const note = (b.note ?? "").trim();
+    if (note.length < 2 || note.length > 2000) return c.json({ error: "Write a short note to the buyer (PayPal shows it to them)." }, 400);
+    const kase = await build(id, { fresh: true });
+    if (b.action !== "make_offer" && b.action !== "accept_claim") return c.json({ error: "Unknown action." }, 400);
+    if (!kase.dispute.actions.includes(b.action)) return c.json({ error: `PayPal does not offer ${b.action === "make_offer" ? "an offer" : "accepting the claim"} on this dispute right now.` }, 409);
+    const disputed = Number(kase.dispute.amount.value);
+    let request: unknown, status = 0, response: unknown;
+    try {
+      if (b.action === "make_offer") {
+        const amount = Number(b.amount);
+        if (!/^\d{1,7}(\.\d{1,2})?$/.test(b.amount ?? "") || !(amount > 0) || amount > disputed) return c.json({ error: `Offer an amount above 0 and no more than the ${kase.dispute.amount.value} disputed.` }, 400);
+        request = { note, offer_amount: { currency_code: kase.dispute.amount.currency, value: amount.toFixed(2) }, offer_type: "REFUND" as const };
+        response = await pp.makeOffer(id, request as any);
+      } else {
+        request = { note };
+        response = await pp.acceptClaim(id, note);
+      }
+      status = 200;
+    } catch (e) { if (e instanceof PayPalError || isDemoRefusal(e)) { status = e.status; response = e.body; } else throw e; }
+    store.addSettlement({ disputeId: id, action: b.action, approvedBy: b.approvedBy.trim().slice(0, 80), request, response, status });
+    if (status !== 200) return c.json({ error: "PayPal refused it.", status, paypal: response }, 502);
+    await syncDispute(id);
+    broadcast("dispute", id);
+    return c.json({ ok: true, case: await build(id) });
+  } catch (e) { return fail(c, e); }
+});
+
 // The guard on its own (no AI call): lets the seller edit the statement and see at once whether it would pass.
 app.post("/api/disputes/:id/check-statement", async (c) => {
   try {
@@ -305,6 +342,25 @@ app.get("/api/demo/return", async (c) => {
     broadcast("payments");
     return c.redirect(`/#/payments/${capture.id}`);
   } catch (e) { return c.text((e as Error).message, 502); }
+});
+
+// ---- tracking: give PayPal the carrier and number on the order itself, before any dispute ----
+app.post("/api/payments/:txId/tracking", async (c) => {
+  const txId = c.req.param("txId");
+  if (!TX_ID.test(txId)) return c.json({ error: "Bad transaction id." }, 400);
+  const { factId } = await c.req.json<{ factId: string }>();
+  const payment = store.payment(txId);
+  if (!payment?.orderId) return c.json({ error: "PayPal needs the order this payment belongs to, and ClaimPack only knows it for sales made through ClaimPack's checkout. Add tracking in PayPal's Activity page instead." }, 409);
+  const fact = store.docs(txId).filter((d) => !d.quarantined).flatMap((d) => store.read(d.id)?.facts ?? []).find((f): f is Extract<Fact, { kind: "tracking" }> => f.id === factId && f.kind === "tracking");
+  if (!fact) return c.json({ error: "That tracking number is not in this payment's documents." }, 404);
+  const body = trackerBody(txId, fact);
+  let status = 0, response: unknown;
+  try { response = await pp.call("add tracking", `/v2/checkout/orders/${encodeURIComponent(payment.orderId)}/track`, { method: "POST", json: body, headers: { "PayPal-Request-Id": `claimpack-track-${txId}-${body.tracking_number}` } }); status = 201; }
+  catch (e) { if (e instanceof PayPalError) { status = e.status; response = e.body; } else return fail(c, e); }
+  store.addTracker({ txId, factId, carrier: body.carrier_name_other ?? body.carrier, trackingNumber: body.tracking_number, status, response });
+  broadcast("docs", txId);
+  if (status >= 300) return c.json({ error: "PayPal refused the tracking.", status, paypal: response }, 502);
+  return c.json({ ok: true, sent: body });
 });
 
 // ---- PayPal webhook: the only route that answers from outside; trusted only after PayPal confirms the signature ----

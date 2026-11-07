@@ -35,7 +35,7 @@ describe("defensive appsec contracts (no services)",()=>{
   const raw={dispute_id:"PP-R-MOCK",reason:d.reason,dispute_life_cycle_stage:"CHARGEBACK",status:d.status,dispute_amount:{value:"120.00",currency_code:"USD"},create_time:"2026-11-06",links:[{rel:"provide_evidence"}],disputed_transactions:[{seller_transaction_id:"CAPTURE-A",create_time:"2026-11-05",gross_amount:{value:"120.00",currency_code:"USD"}}]};
   let refreshed=0;
   const pp={refundsForCapture:async()=>[],getDispute:async()=>{refreshed++;return {...raw,status:"RESOLVED",links:[]};}};
-  const store={dispute:()=>raw,docs:()=>[],payment:()=>undefined,filings:()=>[],upsertDispute:()=>{}};
+  const store={dispute:()=>raw,docs:()=>[],payment:()=>undefined,filings:()=>[],settlements:()=>[],upsertDispute:()=>{}};
   await buildCase(store as any,pp as any,"PP-R-MOCK",{fresh:true,now:"2026-11-07"});console.log("A04",{refreshed});expect(refreshed).toBe(1);
  });
  it("A05 multipart builder must reject oversized file before submission",()=>{
