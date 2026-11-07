@@ -11,6 +11,10 @@ Built for the PayPal AI Hackathon (Devpost), solo, 5 to 12 November 2026. All da
 | Disputes, soonest deadline first | What PayPal received, after a named person approved |
 |---|---|
 | ![Disputes page](docs/screenshots/01-disputes.png) | ![Statement and filing](docs/screenshots/03-statement-and-filing.png) |
+| **At approval: each sentence beside the exact words it cites** | **Not ready: what is missing, and the Seller Protection label** |
+| ![Approval with cited words](docs/screenshots/05-approval-cited-words.png) | ![Incomplete pack with protection label](docs/screenshots/06-incomplete-and-protection.png) |
+| **Nothing PayPal would accept: settle instead** | **Demo mode: the 30 evaluation disputes, no keys** |
+| ![Settle](docs/screenshots/07-settle.png) | ![Demo queue](docs/screenshots/08-demo-queue.png) |
 
 ---
 

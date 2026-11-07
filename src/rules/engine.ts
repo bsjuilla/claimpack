@@ -319,7 +319,7 @@ function requirementsFor(d: DisputeCase, of: Of, allowed: EvidenceType[]) {
     case "MERCHANDISE_OR_SERVICE_NOT_RECEIVED": {
       // PayPal: carrier + tracking number, OR notes/documents proving delivery.
       const proof = [...trackingFacts, ...deliveryFacts, ...of("acknowledgement")];
-      ok({ id: "fulfilment", label: "Proof the order was delivered (tracking, delivery record or buyer's confirmation)", required: true,
+      ok({ id: "fulfilment", label: "Proof the order was sent (carrier and tracking number, a delivery record, or the buyer's confirmation)", required: true,
         detail: "PayPal asks for carrier + tracking number, or documents proving delivery." }, proof);
       for (const f of trackingFacts) tracking.push(trackingInfo(f));
       // Required since the 7 Nov reviews: PayPal's Seller Protection asks for a "delivered" status and date for physical
