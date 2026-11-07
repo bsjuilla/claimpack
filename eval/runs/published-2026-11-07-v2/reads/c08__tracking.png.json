@@ -1,0 +1,82 @@
+{
+ "docId": "tracking.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "JD014600006281234567",
+    "page": null,
+    "at": "2026-10-13T10:15:00",
+    "order_ref": "INV-3108",
+    "transaction_id": null,
+    "carrier": "DHL",
+    "tracking_number": "JD014600006281234567",
+    "tracking_status": "delivered",
+    "recipient": "Martha Klein",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "Delivered",
+    "page": null,
+    "at": "2026-10-13T10:15:00",
+    "order_ref": "INV-3108",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Martha Klein",
+    "delivery_method": "physical",
+    "detail": "Leeds",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "tracking.png#1",
+   "kind": "tracking",
+   "carrier": "DHL",
+   "trackingNumber": "JD014600006281234567",
+   "status": "delivered",
+   "at": "2026-10-13T10:15:00",
+   "recipient": "Martha Klein",
+   "orderRef": "INV-3108",
+   "cite": {
+    "docId": "tracking.png",
+    "quote": "JD014600006281234567"
+   }
+  },
+  {
+   "id": "tracking.png#2",
+   "kind": "delivery",
+   "method": "physical",
+   "at": "2026-10-13T10:15:00",
+   "detail": "Leeds",
+   "recipient": "Martha Klein",
+   "orderRef": "INV-3108",
+   "cite": {
+    "docId": "tracking.png",
+    "quote": "Delivered"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0083425,
+ "ms": 19436
+}

@@ -1,0 +1,8 @@
+{
+ "statement": "Order INV-3102 for 64.00 USD was placed by Daniel Okafor on 12 October 2026 for Art print, A3, framed [F3] [F4]. The shipment was sent by USPS with tracking number 9405 5112 0620 4511 9930 21 [F1]. The tracking status is delivered to Daniel Okafor in Columbus, OH 43215 on 16 October 2026 [F1] [F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "Order INV-3102 for 64.00 USD was placed by Daniel Okafor on 12 October 2026 for Art print, A3, framed (see invoice-INV-3102.pdf). The shipment was sent by USPS with tracking number 9405 5112 0620 4511 9930 21 (see tracking-screenshot.png). The tracking status is delivered to Daniel Okafor in Columbus, OH 43215 on 16 October 2026 (see tracking-screenshot.png).",
+ "costUsd": 0.0077915
+}

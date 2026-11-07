@@ -1,0 +1,57 @@
+{
+ "docId": "delivery-log.txt",
+ "output": {
+  "document_type": "delivery_log",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "delivery",
+    "quote": "05/10 08:45  Link sent to client for album-cover-INV-3114.zip",
+    "page": null,
+    "at": null,
+    "order_ref": "INV-3114",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": "digital",
+    "detail": "Link sent to client for album-cover-INV-3114.zip",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Aarav Shah",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "05/10 09:30  album-cover-INV-3114.zip downloaded (1 of 1)",
+    "page": null,
+    "at": null,
+    "order_ref": "INV-3114",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": "digital",
+    "detail": "album-cover-INV-3114.zip downloaded (1 of 1)",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Aarav Shah",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [],
+ "dropped": [
+  "delivery-log.txt#1 (delivery): needs a date",
+  "delivery-log.txt#2 (delivery): needs a date"
+ ],
+ "costUsd": 0.01140025,
+ "ms": 35179
+}

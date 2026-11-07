@@ -49,3 +49,11 @@ export const when = (iso?: string | null) => {
   return `${day(zoned ? iso : iso.slice(0, 10))}, ${hhmm}`;
 };
 export const daysLeft = (iso?: string | null) => (iso ? Math.floor((Date.parse(iso) - Date.now()) / 86_400_000) : null);
+
+export const PROTECTION_WORD: Record<string, string> = {
+  LIKELY: "Seller Protection: likely to apply",
+  UNLIKELY: "Seller Protection: unlikely",
+  NOT_COVERED: "Seller Protection: not covered",
+  NOT_APPLICABLE: "Seller Protection: not needed",
+  NOT_ASSESSED: "Seller Protection: not assessed for this reason",
+};

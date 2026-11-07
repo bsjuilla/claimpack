@@ -1,0 +1,82 @@
+{
+ "docId": "tracking-screenshot.png",
+ "output": {
+  "document_type": "tracking_page",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "tracking",
+    "quote": "9405 5112 0620 4511 9930 21",
+    "page": null,
+    "at": "2026-10-16T14:41:00",
+    "order_ref": "INV-3102",
+    "transaction_id": null,
+    "carrier": "USPS",
+    "tracking_number": "9405 5112 0620 4511 9930 21",
+    "tracking_status": "delivered",
+    "recipient": "Daniel Okafor",
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "delivery",
+    "quote": "Delivered",
+    "page": null,
+    "at": "2026-10-16T14:41:00",
+    "order_ref": "INV-3102",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": "Daniel Okafor",
+    "delivery_method": "physical",
+    "detail": "Columbus, OH 43215",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "tracking-screenshot.png#1",
+   "kind": "tracking",
+   "carrier": "USPS",
+   "trackingNumber": "9405 5112 0620 4511 9930 21",
+   "status": "delivered",
+   "at": "2026-10-16T14:41:00",
+   "recipient": "Daniel Okafor",
+   "orderRef": "INV-3102",
+   "cite": {
+    "docId": "tracking-screenshot.png",
+    "quote": "9405 5112 0620 4511 9930 21"
+   }
+  },
+  {
+   "id": "tracking-screenshot.png#2",
+   "kind": "delivery",
+   "method": "physical",
+   "at": "2026-10-16T14:41:00",
+   "detail": "Columbus, OH 43215",
+   "recipient": "Daniel Okafor",
+   "orderRef": "INV-3102",
+   "cite": {
+    "docId": "tracking-screenshot.png",
+    "quote": "Delivered"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.01188275,
+ "ms": 28438
+}

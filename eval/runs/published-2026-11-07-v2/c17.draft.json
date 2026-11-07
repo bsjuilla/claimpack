@@ -1,0 +1,8 @@
+{
+ "statement": "The order INV-3117 was sent by Royal Mail with tracking number AB123456789GB [F1]. The tracking status is delivered to Mia Novak on 7 October 2026 [F1]. The physical delivery to Mia Novak in Bristol for order INV-3117 was completed on 7 October 2026 [F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The order INV-3117 was sent by Royal Mail with tracking number AB123456789GB (see posting-receipt.png). The tracking status is delivered to Mia Novak on 7 October 2026 (see posting-receipt.png). The physical delivery to Mia Novak in Bristol for order INV-3117 was completed on 7 October 2026 (see posting-receipt.png).",
+ "costUsd": 0.004605
+}

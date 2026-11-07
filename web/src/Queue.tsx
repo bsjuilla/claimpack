@@ -7,11 +7,12 @@ import { REASON_LABEL, STATUS_WORD, day, daysLeft, money } from "./words";
 
 export function Queue() {
   const [rows, setRows] = useState<DisputeRow[] | null>(null);
+  const [loadError, setLoadError] = useState("");
   // The desk photograph is optional: use it only if it has been added to web/public/img.
   const [photo, setPhoto] = useState(false);
   useEffect(() => { const i = new Image(); i.onload = () => setPhoto(true); i.src = "/img/hero-desk.webp"; }, []);
   useEffect(() => {
-    const load = () => get<DisputeRow[]>("/api/disputes").then(setRows).catch(() => setRows([]));
+    const load = () => get<DisputeRow[]>("/api/disputes").then((r) => { setRows(r); setLoadError(""); }).catch((e) => setLoadError((e as Error).message || "no answer"));
     load();
     return onServerChange((m) => { if (m.what === "disputes" || m.what === "dispute" || m.what === "docs") load(); });
   }, []);
@@ -40,6 +41,7 @@ export function Queue() {
 
   return (
     <>
+      {loadError && <div className="load-error" role="alert">The disputes could not be loaded ({loadError}). What is shown may be out of date; ClaimPack will try again when PayPal next changes.</div>}
       <div className={`desk${photo ? " has-photo" : ""}`}>
         <div className="inner">
           <h1>Disputes</h1>

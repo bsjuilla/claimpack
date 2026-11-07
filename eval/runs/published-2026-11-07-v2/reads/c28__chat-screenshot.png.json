@@ -1,0 +1,75 @@
+{
+ "docId": "chat-screenshot.png",
+ "output": {
+  "document_type": "email_or_chat",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "communication",
+    "quote": "Reminder: your plan renews on 1 November.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Reminder: your plan renews on 1 November.",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "seller"
+   },
+   {
+    "kind": "communication",
+    "quote": "Ok thanks.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": "Ok thanks.",
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": "buyer"
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "chat-screenshot.png#1",
+   "kind": "communication",
+   "from": "seller",
+   "text": "Reminder: your plan renews on 1 November.",
+   "cite": {
+    "docId": "chat-screenshot.png",
+    "quote": "Reminder: your plan renews on 1 November."
+   }
+  },
+  {
+   "id": "chat-screenshot.png#2",
+   "kind": "communication",
+   "from": "buyer",
+   "text": "Ok thanks.",
+   "cite": {
+    "docId": "chat-screenshot.png",
+    "quote": "Ok thanks."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0091945,
+ "ms": 23507
+}

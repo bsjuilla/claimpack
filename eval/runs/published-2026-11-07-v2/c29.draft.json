@@ -1,0 +1,8 @@
+{
+ "statement": "Digital products can be refunded within 7 days if they have not been downloaded [F1]. Once a file has been downloaded, the sale is final [F2]. Download therefore ends eligibility for a refund within 7 days [F1] [F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "Digital products can be refunded within 7 days if they have not been downloaded (see refund-policy.pdf). Once a file has been downloaded, the sale is final (see refund-policy.pdf). Download therefore ends eligibility for a refund within 7 days (see refund-policy.pdf).",
+ "costUsd": 0.00837275
+}

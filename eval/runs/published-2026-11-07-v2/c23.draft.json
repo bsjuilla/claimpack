@@ -1,0 +1,8 @@
+{
+ "statement": "The buyer requested the 2-hour logo workshop for next week [F1]. The buyer stated paying now in the message \"Hi! I'd like to book the 2-hour logo workshop for next week, paying now.\" [F1]. The buyer sent the message \"Thanks for today's session, really useful.\" [F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The buyer requested the 2-hour logo workshop for next week (see chat-screenshot.png). The buyer stated paying now in the message \"Hi! I'd like to book the 2-hour logo workshop for next week, paying now.\" (see chat-screenshot.png). The buyer sent the message \"Thanks for today's session, really useful.\" (see chat-screenshot.png).",
+ "costUsd": 0.005489
+}

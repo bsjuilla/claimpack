@@ -216,3 +216,16 @@ pre.request { font: 400 12.5px/1.55 var(--mono); background: var(--sunk); border
 @media (prefers-color-scheme: dark) { .tabbed::before { background: #8a7446; } }
 .env .dot.live { background: var(--ready); box-shadow: 0 0 0 0 color-mix(in srgb, var(--ready) 55%, transparent); animation: pulse 2.4s ease-out infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ready) 50%, transparent); } 100% { box-shadow: 0 0 0 8px transparent; } }
+
+/* the second bar under the verdict: would PayPal's Seller Protection likely cover it? */
+.protection { display: grid; gap: 4px; padding: 12px 24px 14px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); background: var(--panel); font-size: 14px; color: var(--ink-2); }
+.protection b { font-size: 14px; }
+.p-LIKELY b { color: var(--ready); }
+.p-UNLIKELY b { color: var(--incomplete); }
+.p-NOT_COVERED b, .p-NOT_ASSESSED b, .p-NOT_APPLICABLE b { color: var(--nodef); }
+.cites { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 12px; }
+.cites li { display: grid; gap: 4px; padding-left: 12px; border-left: 2px solid var(--line-2); }
+.cites .said { font-family: var(--serif); font-size: 15px; color: var(--ink); }
+.cites .src { font-size: 13px; color: var(--ink-3); }
+.cites .src q { font-family: var(--serif); background: linear-gradient(transparent 58%, var(--mark-wash) 58%); color: var(--ink-2); }
+.load-error { border-left: 3px solid var(--conflict); background: var(--conflict-wash); padding: 12px 16px; border-radius: 0 var(--r-1) var(--r-1) 0; margin-bottom: 16px; font-size: 14px; }

@@ -1,0 +1,8 @@
+{
+ "statement": "Order INV-3113 was for Chloe Dubois [F1]. The download link for wedding-invite-INV-3113.pdf was re-sent at 12:00 UTC on 25 October 2026 [F2]. wedding-invite-INV-3113.pdf was downloaded at 13:15 UTC on 25 October 2026 [F3].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "Order INV-3113 was for Chloe Dubois (see delivery-log.txt). The download link for wedding-invite-INV-3113.pdf was re-sent at 12:00 UTC on 25 October 2026 (see delivery-log.txt). wedding-invite-INV-3113.pdf was downloaded at 13:15 UTC on 25 October 2026 (see delivery-log.txt).",
+ "costUsd": 0.0071855
+}

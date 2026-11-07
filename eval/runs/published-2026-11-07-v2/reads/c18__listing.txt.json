@@ -1,0 +1,132 @@
+{
+ "docId": "listing.txt",
+ "output": {
+  "document_type": "listing",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "description",
+    "quote": "Listing: Wordpress landing page, one page",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Package: one landing page, mobile-friendly, contact form, two rounds of changes.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Delivered as a WordPress theme file within 5 working days.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "policy",
+    "quote": "Returns: digital services cannot be returned; changes are included as listed.",
+    "page": null,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": "return",
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "listing.txt#1",
+   "kind": "description",
+   "text": "Listing: Wordpress landing page, one page",
+   "cite": {
+    "docId": "listing.txt",
+    "quote": "Listing: Wordpress landing page, one page"
+   }
+  },
+  {
+   "id": "listing.txt#2",
+   "kind": "description",
+   "text": "Package: one landing page, mobile-friendly, contact form, two rounds of changes.",
+   "cite": {
+    "docId": "listing.txt",
+    "quote": "Package: one landing page, mobile-friendly, contact form, two rounds of changes."
+   }
+  },
+  {
+   "id": "listing.txt#3",
+   "kind": "description",
+   "text": "Delivered as a WordPress theme file within 5 working days.",
+   "cite": {
+    "docId": "listing.txt",
+    "quote": "Delivered as a WordPress theme file within 5 working days."
+   }
+  },
+  {
+   "id": "listing.txt#4",
+   "kind": "policy",
+   "policy": "return",
+   "text": "Returns: digital services cannot be returned; changes are included as listed.",
+   "cite": {
+    "docId": "listing.txt",
+    "quote": "Returns: digital services cannot be returned; changes are included as listed."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0074465,
+ "ms": 19120
+}

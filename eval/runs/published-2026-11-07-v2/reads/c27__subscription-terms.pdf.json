@@ -1,0 +1,108 @@
+{
+ "docId": "subscription-terms.pdf",
+ "output": {
+  "document_type": "terms_or_policy",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "policy",
+    "quote": "1. The plan renews on the 1st of each month.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": "subscription",
+    "from": null
+   },
+   {
+    "kind": "policy",
+    "quote": "2. Cancel at least 48 hours before the renewal date to avoid the next charge.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": "cancellation",
+    "from": null
+   },
+   {
+    "kind": "policy",
+    "quote": "3. Charges already made are not refunded.",
+    "page": 1,
+    "at": null,
+    "order_ref": null,
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": null,
+    "policy": "refund",
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "subscription-terms.pdf#1",
+   "kind": "policy",
+   "policy": "subscription",
+   "text": "1. The plan renews on the 1st of each month.",
+   "cite": {
+    "docId": "subscription-terms.pdf",
+    "page": 1,
+    "quote": "1. The plan renews on the 1st of each month."
+   }
+  },
+  {
+   "id": "subscription-terms.pdf#2",
+   "kind": "policy",
+   "policy": "cancellation",
+   "text": "2. Cancel at least 48 hours before the renewal date to avoid the next charge.",
+   "cite": {
+    "docId": "subscription-terms.pdf",
+    "page": 1,
+    "quote": "2. Cancel at least 48 hours before the renewal date to avoid the next charge."
+   }
+  },
+  {
+   "id": "subscription-terms.pdf#3",
+   "kind": "policy",
+   "policy": "refund",
+   "text": "3. Charges already made are not refunded.",
+   "cite": {
+    "docId": "subscription-terms.pdf",
+    "page": 1,
+    "quote": "3. Charges already made are not refunded."
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0080755,
+ "ms": 5893
+}

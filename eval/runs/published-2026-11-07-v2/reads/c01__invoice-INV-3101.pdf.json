@@ -1,0 +1,81 @@
+{
+ "docId": "invoice-INV-3101.pdf",
+ "output": {
+  "document_type": "invoice",
+  "addressed_to_reader": false,
+  "addressed_to_reader_quote": null,
+  "facts": [
+   {
+    "kind": "invoice",
+    "quote": "Invoice no. INV-3101",
+    "page": 1,
+    "at": "2026-10-20",
+    "order_ref": "INV-3101",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": "120.00",
+    "amount_currency": "USD",
+    "buyer": "Amelia Hart <amelia.hart@example.com>",
+    "policy": null,
+    "from": null
+   },
+   {
+    "kind": "description",
+    "quote": "Logo design, 3 concepts, vector files",
+    "page": 1,
+    "at": "2026-10-20",
+    "order_ref": "INV-3101",
+    "transaction_id": null,
+    "carrier": null,
+    "tracking_number": null,
+    "tracking_status": null,
+    "recipient": null,
+    "delivery_method": null,
+    "detail": null,
+    "refund_id": null,
+    "amount_value": null,
+    "amount_currency": null,
+    "buyer": "Amelia Hart <amelia.hart@example.com>",
+    "policy": null,
+    "from": null
+   }
+  ]
+ },
+ "facts": [
+  {
+   "id": "invoice-INV-3101.pdf#1",
+   "kind": "invoice",
+   "orderRef": "INV-3101",
+   "buyer": "Amelia Hart <amelia.hart@example.com>",
+   "amount": {
+    "value": "120.00",
+    "currency": "USD"
+   },
+   "at": "2026-10-20",
+   "cite": {
+    "docId": "invoice-INV-3101.pdf",
+    "page": 1,
+    "quote": "Invoice no. INV-3101"
+   }
+  },
+  {
+   "id": "invoice-INV-3101.pdf#2",
+   "kind": "description",
+   "text": "Logo design, 3 concepts, vector files",
+   "cite": {
+    "docId": "invoice-INV-3101.pdf",
+    "page": 1,
+    "quote": "Logo design, 3 concepts, vector files"
+   }
+  }
+ ],
+ "dropped": [],
+ "costUsd": 0.0137125,
+ "ms": 11618
+}

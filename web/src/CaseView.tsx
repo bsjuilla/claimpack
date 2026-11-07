@@ -6,7 +6,7 @@ import { useToast } from "./App";
 import { gridTheme } from "./grid";
 import { Locker } from "./Locker";
 import { Cutout } from "./Cutout";
-import { EVIDENCE_WORD, KIND_WORD, REASON_LABEL, STAGE_WORD, STATUS_WORD, VERDICT_WORD, day, money, when } from "./words";
+import { EVIDENCE_WORD, KIND_WORD, PROTECTION_WORD, REASON_LABEL, STAGE_WORD, STATUS_WORD, VERDICT_WORD, day, money, when } from "./words";
 
 export function CaseView({ id }: { id: string }) {
   const toast = useToast();
@@ -71,9 +71,14 @@ function Pack({ kase }: { kase: Case }) {
       <div className={`verdict v-${plan.verdict}`}>
         <Cutout key={plan.verdict} name={({ READY: "cut-folder-ready", INCOMPLETE: "cut-folder-missing", CONFLICT: "cut-receipts-conflict", NO_DEFENCE: "cut-folder-empty" })[plan.verdict]} />
         <div id="pack-h" className="word">{VERDICT_WORD[plan.verdict]}</div>
-        <p className="why">{plan.evidenceType ? <>Filed as <b>{EVIDENCE_WORD[plan.evidenceType]}</b>, the evidence PayPal accepts for this reason. </> : null}{plan.verdict === "READY" ? plan.suggestion ?? "" : plan.suggestion}</p>
-        <div className="meter"><div className="track"><div className="fill" style={{ width: `${plan.completeness}%` }} /></div><span>{plan.completeness}% of what PayPal asks for</span></div>
+        <p className="why">{plan.evidenceType ? <>Filed as <b>{EVIDENCE_WORD[plan.evidenceType]}</b>, the evidence PayPal accepts for this reason. </> : null}{plan.suggestion ?? ""}</p>
+        <div className="meter"><div className="track"><div className="fill" style={{ width: `${plan.completeness}%` }} /></div>
+          <span>{slots.filter((c) => c.status === "ok").length} of {slots.length} checks met. This measures PayPal's evidence rules, not PayPal's decision.</span></div>
       </div>
+      {plan.protection && <div className={`protection p-${plan.protection.level}`}>
+        <b>{PROTECTION_WORD[plan.protection.level]}</b>
+        <span>{plan.protection.reasons.join(" ")}</span>
+      </div>}
       <div className="slots">
         {slots.length === 0 && <div className="slot missing"><span className="tick" /><span className="label">Add documents to see what PayPal needs</span></div>}
         {slots.map((c) => <Slot key={c.id} c={c} byId={byId} docName={docName} />)}
@@ -151,10 +156,13 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
   const request = plan.evidenceType ? { evidences: [{ evidence_type: plan.evidenceType, evidence_info: { ...(plan.evidenceInfo.tracking_info ? { tracking_info: plan.evidenceInfo.tracking_info } : {}), ...(plan.evidenceInfo.refund_ids ? { refund_ids: plan.evidenceInfo.refund_ids } : {}) }, documents: files.map((n) => ({ name: n })), notes: check?.notes ?? "(the statement, once written)" }] } : null;
   const filed = [...kase.filings].reverse().find((f) => f.status === 200);
   const canFile = plan.verdict === "READY" && plan.canFileNow && !!check?.ok && name.trim().length > 1 && sure && busy === "";
+  // The same F1..Fn numbering the drafter used: the facts the plan counts, in the order the case lists them.
+  const aliased = kase.facts.filter((f) => plan.usedFactIds.includes(f.id)).map((f, i) => ({ ...f, id: `F${i + 1}` }));
+  const docName = new Map(kase.docs.map((d) => [d.id, d.originalName]));
 
   async function draft() {
     setBusy("draft");
-    try { const r = await post<Draft>(`/api/disputes/${encodeURIComponent(id)}/draft`); setStatement(r.statement); setCheck(r.check); toast({ text: `Drafted with Muse Spark (${(r.costUsd * 100).toFixed(1)}¢). Every sentence is checked against your documents.` }); }
+    try { const r = await post<Draft>(`/api/disputes/${encodeURIComponent(id)}/draft`); setStatement(r.statement); setCheck(r.check); toast({ text: `Drafted with Muse Spark (${(r.costUsd * 100).toFixed(1)}¢). Each sentence is checked against the words it cites.` }); }
     catch (e) { toast({ text: (e as Error).message, error: true }); }
     finally { setBusy(""); }
   }
@@ -205,7 +213,13 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
           </div>
           {plan.verdict !== "READY" && <p className="small muted">A statement is drafted once the pack is ready to file.</p>}
           <textarea value={statement} onChange={(e) => setStatement(e.target.value)} placeholder="The statement PayPal reads. Draft it from the evidence, then edit as you like: each sentence must keep its [F1] reference and only use what the documents say." aria-label="Statement to PayPal" />
-          {check && (check.ok ? <p className="passed" style={{ marginTop: 8 }}>Every sentence is backed by your documents.</p>
+          {check && (check.ok ? <>
+              <p className="passed" style={{ marginTop: 8 }}>Every sentence cites a document, and every number, date and claim word in it appears in what it cites. This is a word-level check, so read each sentence beside its words below.</p>
+              <ul className="cites">{citedSentences(statement, aliased).map((s, i) => (
+                <li key={i}><span className="said">{s.text}</span>
+                  {s.facts.map((f) => <span className="src" key={f.id}>[{f.id}] {docName.get(f.cite.docId) ?? f.cite.docId}: <q>{f.cite.quote}</q></span>)}</li>
+              ))}</ul>
+            </>
             : <ul className="problems">{check.problems.map((p, i) => <li key={i}>{p.problem}{p.sentence && <>: <span>“{p.sentence}”</span></>}</li>)}</ul>)}
         </div>
         <div className="panel">
@@ -225,4 +239,12 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
       </>}
     </section>
   );
+}
+
+/** Split the statement into sentences and attach the facts each one cites, so the approver reads claim and source side by side. */
+function citedSentences(statement: string, facts: Fact[]) {
+  const byAlias = new Map(facts.map((f) => [f.id, f]));
+  return (statement.match(/[^.!?]+(?:[.!?]+(?:\s*\[F\d+\](?:\s*\[F\d+\])*)?|$)/g) ?? [])
+    .map((t) => t.trim()).filter(Boolean)
+    .map((text) => ({ text, facts: [...new Set([...text.matchAll(/\[(F\d+)\]/g)].map((m) => m[1]))].map((a) => byAlias.get(a)).filter(Boolean) as Fact[] }));
 }

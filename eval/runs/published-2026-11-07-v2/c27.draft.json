@@ -1,0 +1,8 @@
+{
+ "statement": "The plan renews on the 1st of each month [F1]. Cancel at least 48 hours before the renewal date to avoid the next charge [F2]. The renewal date is the 1st of each month, so the cancellation deadline is 48 hours before that date [F1][F2].",
+ "ok": true,
+ "attempts": 1,
+ "problems": [],
+ "notes": "The plan renews on the 1st of each month (see subscription-terms.pdf). Cancel at least 48 hours before the renewal date to avoid the next charge (see subscription-terms.pdf). The renewal date is the 1st of each month, so the cancellation deadline is 48 hours before that date (see subscription-terms.pdf).",
+ "costUsd": 0.0049425
+}

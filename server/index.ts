@@ -1,4 +1,5 @@
 // ClaimPack server: local API + web app + PayPal webhook. Listens on 127.0.0.1 only.
+import { bytesMatchExtension } from "../src/sniff";
 import { createHash, randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
@@ -138,6 +139,7 @@ app.post("/api/payments/:txId/docs", async (c) => {
     if (!MIME[ext] && !TEXT_EXT.has(ext)) return c.json({ error: `${f.name}: use PDF, PNG, JPG, GIF, WEBP, or a text file (.txt .csv .log .eml .md).` }, 400);
     if (f.size > MAX_UPLOAD) return c.json({ error: `${f.name} is over 10 MB (PayPal's limit per file).` }, 400);
     const bytes = new Uint8Array(await f.arrayBuffer());
+    if (!bytesMatchExtension(ext, bytes, TEXT_EXT)) return c.json({ error: `${f.name}: the file inside is not a ${ext.slice(1).toUpperCase()} file. Upload the original document.` }, 400);
     const sha256 = createHash("sha256").update(bytes).digest("hex");
     if (store.docs(txId).some((d) => d.sha256 === sha256)) continue; // same file twice
     const id = `d${sha256.slice(0, 8)}${randomBytes(2).toString("hex")}`;
