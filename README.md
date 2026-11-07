@@ -96,7 +96,7 @@ Because those fixes were made after seeing the test, the second column is not a 
 
 ## Reviewed from five angles
 
-Before submitting, the project went to five independent reviewers, each with one brief: hackathon judges, an adversary trying to make it file something false, a PayPal disputes specialist, small sellers, and a presentation critic. Their attacks became tests. **113 tests now pass**, including the reviewers' own cases in `tests/review/`: forged refund IDs, another buyer's tracking, failed deliveries, ambiguous dates, invented quotations, claim words the documents never support, and oversized or misnamed files.
+Before submitting, the project went to five independent reviewers, each with one brief: hackathon judges, an adversary trying to make it file something false, a PayPal disputes specialist, small sellers, and a presentation critic. Their attacks became tests. **117 tests now pass**, including the reviewers' own cases in `tests/review/`: forged refund IDs, another buyer's tracking, failed deliveries, ambiguous dates, invented quotations, claim words the documents never support, and oversized or misnamed files.
 
 What changed because of them:
 - the Seller Protection label;
@@ -118,7 +118,18 @@ ClaimPack gives that seller the discipline an agency applies:
 - it says exactly what is missing, or that refunding is cheaper;
 - it files through the Disputes API only after the seller approves.
 
-## Run it
+## Try it in two minutes, no keys
+
+```bash
+git clone https://github.com/bsjuilla/claimpack.git
+cd claimpack
+npm install
+npm run demo              # http://127.0.0.1:8790
+```
+
+Demo mode needs no PayPal account and no Meta key. It loads the 30 synthetic disputes from the published evaluation with the readings Muse Spark returned for them, and sets the clock to the date the set was scored, so every deadline reads as it did then. Open any dispute to see the verdict, the Seller Protection label and the exact words that fill each requirement. On a ready case, press **Draft** to load the statement Muse Spark wrote in that run, edit it to try to slip something past the guard, then approve and **File**. Filing goes to a simulated PayPal that checks the request the way the real API does (file names, formats, sizes, one filing per stage) and records it. Nothing leaves your computer, and each start begins fresh in `data-demo/`. A test (`tests/demo.test.ts`) checks that the demo gives every case its expected verdict.
+
+## Run it against the PayPal sandbox
 
 You need Node.js 22.5 or later, a PayPal developer account with a **sandbox** app (developer.paypal.com, Apps & Credentials, Sandbox), and a Meta Model API key for the AI steps.
 
@@ -127,7 +138,7 @@ git clone https://github.com/bsjuilla/claimpack.git
 cd claimpack
 npm install
 cp .env.example .env      # then add your PayPal sandbox client ID and secret, and META_API_KEY
-npm test                  # 113 tests: rules engine, statement guard, PayPal parsing, reviewers' attacks
+npm test                  # 117 tests: rules engine, statement guard, PayPal parsing, reviewers' attacks, demo
 npm run app               # builds the web app and starts http://127.0.0.1:8790
 ```
 

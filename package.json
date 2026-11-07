@@ -15,7 +15,8 @@
     "typecheck:web": "tsc --noEmit -p web/tsconfig.json",
     "eval:build": "tsx scripts/eval/build.ts",
     "eval": "tsx scripts/eval/run.ts",
-    "secret-scan": "node scripts/secret-scan.mjs"
+    "secret-scan": "node scripts/secret-scan.mjs",
+    "demo": "npm run web:build && tsx scripts/demo.ts"
   },
   "engines": {
     "node": ">=22.5"

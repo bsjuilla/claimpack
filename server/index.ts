@@ -15,6 +15,7 @@ import { loadEnv, PayPal, PayPalError } from "../src/paypal/client";
 import { summaryPdf, textToPdf } from "../src/pdf/pdfs";
 import { checkStatement } from "../src/rules/statement";
 import { DATA, Store } from "../src/store";
+import { DEMO_NOW, DemoPayPal, isDemoRefusal, savedDraft, seedDemo } from "../src/demo/demo";
 
 const ROOT = join(import.meta.dirname, "..");
 process.chdir(ROOT); // static files and data resolve from the repo, whoever starts the server
@@ -22,7 +23,17 @@ loadEnv(ROOT);
 const PORT = Number(process.env.PORT || 8790);
 const HOST = "127.0.0.1";
 const store = new Store();
-const pp = new PayPal();
+// Demo mode (npm run demo): no keys; the published evaluation disputes, a stand-in PayPal, and the evaluation's clock.
+const DEMO = process.env.CLAIMPACK_DEMO === "1";
+const pp = (DEMO ? new DemoPayPal() : new PayPal()) as PayPal;
+const demoCases = DEMO ? await seedDemo(ROOT, store, pp as unknown as DemoPayPal, DATA) : new Map<string, string>();
+const NOW = DEMO ? DEMO_NOW : undefined;
+const build = (id: string, o: { fresh?: boolean } = {}) => buildCase(store, pp, id, { now: NOW, ...o });
+/** The Meta client, created only when a document actually needs reading (demo mode has no key). */
+const aiClient = () => {
+  if (DEMO) throw new Error("Demo mode has no Meta key, so it cannot read new documents. The bundled ones were read by Muse Spark in the published run; to read your own, add META_API_KEY and run npm run app.");
+  return makeClient();
+};
 const TX_ID = /^[A-Z0-9]{10,25}$/;
 const DISPUTE_ID = /^PP-[A-Z0-9-]{4,40}$/;
 const TEXT_EXT = new Set([".txt", ".csv", ".log", ".eml", ".md"]);
@@ -85,13 +96,13 @@ app.get("/api/disputes", (c) => {
 app.get("/api/disputes/:id", async (c) => {
   const id = c.req.param("id");
   if (!DISPUTE_ID.test(id)) return c.json({ error: "Bad dispute id." }, 400);
-  try { return c.json(await buildCase(store, pp, id)); } catch (e) { return fail(c, e); }
+  try { return c.json(await build(id)); } catch (e) { return fail(c, e); }
 });
 
 app.post("/api/disputes/:id/refresh", async (c) => {
   const id = c.req.param("id");
   if (!DISPUTE_ID.test(id)) return c.json({ error: "Bad dispute id." }, 400);
-  try { await syncDispute(id); broadcast("dispute", id); return c.json(await buildCase(store, pp, id, { fresh: true })); } catch (e) { return fail(c, e); }
+  try { await syncDispute(id); broadcast("dispute", id); return c.json(await build(id, { fresh: true })); } catch (e) { return fail(c, e); }
 });
 
 // ---- the evidence locker (per payment) ----
@@ -113,10 +124,10 @@ app.post("/api/payments/:txId/read", async (c) => {
   const txId = c.req.param("txId");
   if (!TX_ID.test(txId)) return c.json({ error: "Bad transaction id." }, 400);
   try {
-    const { client, model } = makeClient();
     let cost = 0;
     for (const d of store.docs(txId)) {
       if (store.read(d.id)) continue;
+      const { client, model } = aiClient();
       const r = await readDocument(client, model, d.id, d.path);
       store.saveRead({ docId: d.id, facts: r.facts, dropped: r.dropped, docType: r.output.document_type, quarantineQuote: r.output.addressed_to_reader ? (r.output.addressed_to_reader_quote ?? "(text addressed to an AI)") : undefined, costUsd: r.costUsd, readAt: new Date().toISOString() });
       cost += r.costUsd;
@@ -177,29 +188,37 @@ app.get("/api/docs/:docId/file", (c) => {
 app.post("/api/disputes/:id/read", async (c) => {
   const id = c.req.param("id");
   try {
-    const kase = await buildCase(store, pp, id);
-    const { client, model } = makeClient();
+    const kase = await build(id);
     let cost = 0;
     const results = [];
     for (const d of store.docs(kase.dispute.transaction.id)) {
       if (store.read(d.id)) continue;
+      const { client, model } = aiClient();
       const r = await readDocument(client, model, d.id, d.path);
       store.saveRead({ docId: d.id, facts: r.facts, dropped: r.dropped, docType: r.output.document_type, quarantineQuote: r.output.addressed_to_reader ? (r.output.addressed_to_reader_quote ?? "(text addressed to an AI)") : undefined, costUsd: r.costUsd, readAt: new Date().toISOString() });
       cost += r.costUsd;
       results.push({ doc: d.name, facts: r.facts.length, quarantined: r.output.addressed_to_reader });
     }
     broadcast("dispute", id);
-    return c.json({ results, costUsd: cost, case: await buildCase(store, pp, id) });
+    return c.json({ results, costUsd: cost, case: await build(id) });
   } catch (e) { return fail(c, e); }
 });
 
 app.post("/api/disputes/:id/draft", async (c) => {
   const id = c.req.param("id");
   try {
-    const kase = await buildCase(store, pp, id);
+    const kase = await build(id);
     if (kase.plan.verdict !== "READY") return c.json({ error: `The pack is ${kase.plan.verdict}; there is nothing to draft until it is READY.` }, 409);
-    const { client, model } = makeClient();
     const engineDocs = store.docs(kase.dispute.transaction.id).map(engineDoc);
+    if (DEMO) {
+      // The statement Muse Spark wrote for this case in the published run, checked again by the guard here.
+      const statement = savedDraft(ROOT, demoCases.get(id) ?? "");
+      if (!statement) return c.json({ error: "Demo mode has no saved draft for this case. Write the statement yourself: the guard still checks every sentence." }, 409);
+      const aliasFacts = aliasUsed(kase.facts, kase.plan);
+      const check = checkStatement(statement, aliasFacts, aliasFacts.map((f) => f.id), kase.dispute, engineDocs);
+      return c.json({ statement, check, attempts: 1, costUsd: 0, replayed: true, planHash: kase.planHash });
+    }
+    const { client, model } = aiClient();
     const draft = await draftStatement(client, model, kase.dispute, kase.plan, kase.facts, engineDocs);
     return c.json({ ...draft, planHash: kase.planHash });
   } catch (e) { return fail(c, e); }
@@ -211,7 +230,7 @@ app.post("/api/disputes/:id/file", async (c) => {
   try {
     const body = await c.req.json<{ statement: string; approvedBy: string; planHash: string }>();
     if (!body.approvedBy?.trim()) return c.json({ error: "Type your name to approve." }, 400);
-    const kase = await buildCase(store, pp, id, { fresh: true });
+    const kase = await build(id, { fresh: true });
     if (body.planHash !== kase.planHash) return c.json({ error: "The evidence changed since you reviewed it. Review it again before filing." }, 409);
     if (kase.plan.verdict !== "READY") return c.json({ error: `The pack is ${kase.plan.verdict}; ClaimPack only files READY packs.` }, 409);
     if (!kase.plan.canFileNow) return c.json({ error: "PayPal is not accepting evidence on this dispute right now." }, 409);
@@ -233,13 +252,13 @@ app.post("/api/disputes/:id/file", async (c) => {
     const input = evidenceInput(kase.plan, check.notes, files);
     let status = 0, response: unknown;
     try { response = await pp.provideEvidence(id, evidenceForm(input, files)); status = 200; }
-    catch (e) { if (e instanceof PayPalError) { status = e.status; response = e.body; } else throw e; }
+    catch (e) { if (e instanceof PayPalError || isDemoRefusal(e)) { status = e.status; response = e.body; } else throw e; }
     store.addFiling({ disputeId: id, approvedBy: body.approvedBy.trim().slice(0, 80), request: input,
       files: files.map((f) => ({ name: f.name, bytes: f.data.length, sha256: createHash("sha256").update(f.data).digest("hex") })), response, status });
     if (status !== 200) return c.json({ error: "PayPal refused the filing.", status, paypal: response }, 502);
     await syncDispute(id);
     broadcast("dispute", id);
-    return c.json({ ok: true, case: await buildCase(store, pp, id) });
+    return c.json({ ok: true, case: await build(id) });
   } catch (e) { return fail(c, e); }
 });
 
@@ -247,7 +266,7 @@ app.post("/api/disputes/:id/file", async (c) => {
 app.post("/api/disputes/:id/check-statement", async (c) => {
   try {
     const { statement } = await c.req.json<{ statement: string }>();
-    const kase = await buildCase(store, pp, c.req.param("id"));
+    const kase = await build(c.req.param("id"));
     const aliasFacts = aliasUsed(kase.facts, kase.plan);
     return c.json(checkStatement(statement ?? "", aliasFacts, aliasFacts.map((f) => f.id), kase.dispute, store.docs(kase.dispute.transaction.id).map(engineDoc)));
   } catch (e) { return fail(c, e); }
@@ -255,7 +274,7 @@ app.post("/api/disputes/:id/check-statement", async (c) => {
 
 app.get("/api/disputes/:id/summary.pdf", async (c) => {
   try {
-    const kase = await buildCase(store, pp, c.req.param("id"));
+    const kase = await build(c.req.param("id"));
     const engineDocs = store.docs(kase.dispute.transaction.id).map(engineDoc);
     const pdf = await summaryPdf(kase.dispute, kase.plan, kase.facts, engineDocs, c.req.query("notes") ?? "(statement not drafted yet)");
     return new Response(pdf, { headers: { "Content-Type": "application/pdf", "Content-Disposition": "inline; filename=evidence-summary.pdf" } });
@@ -318,7 +337,7 @@ app.get("/api/stream", (c) => streamSSE(c, async (s) => {
   s.onAbort(() => { listeners.delete(send); });
   while (!s.aborted) await s.sleep(25_000).then(() => s.writeSSE({ event: "ping", data: "" }));
 }));
-app.get("/api/health", (c) => c.json({ ok: true, paypal: pp.base.includes("sandbox") ? "sandbox" : "live", webhookConfigured: !!process.env.PAYPAL_WEBHOOK_ID, ai: !!process.env.META_API_KEY }));
+app.get("/api/health", (c) => c.json({ ok: true, demo: DEMO, now: NOW ?? null, paypal: DEMO ? "demo" : pp.base.includes("sandbox") ? "sandbox" : "live", webhookConfigured: !!process.env.PAYPAL_WEBHOOK_ID, ai: !DEMO && !!process.env.META_API_KEY }));
 
 // ---- watching PayPal without a public address: poll the dispute list and sync what changed ----
 // (Webhooks need PayPal to reach this computer; polling does not. Both lead to the same syncDispute.)
@@ -354,5 +373,5 @@ if (existsSync(dist)) {
 } else app.get("/", (c) => c.text("Web app not built yet: run npm run web:build"));
 
 serve({ fetch: app.fetch, port: PORT, hostname: HOST }, () => {
-  console.log(`ClaimPack on http://${HOST}:${PORT}  (PayPal ${pp.base.includes("sandbox") ? "sandbox" : "LIVE"}, webhook ${process.env.PAYPAL_WEBHOOK_ID ? "configured" : "not configured"}, checking PayPal every ${POLL_SECONDS}s)`);
+  console.log(DEMO ? `ClaimPack DEMO on http://${HOST}:${PORT}  (${demoCases.size} evaluation disputes, simulated PayPal, no keys used; clock set to ${NOW})` : `ClaimPack on http://${HOST}:${PORT}  (PayPal ${pp.base.includes("sandbox") ? "sandbox" : "LIVE"}, webhook ${process.env.PAYPAL_WEBHOOK_ID ? "configured" : "not configured"}, checking PayPal every ${POLL_SECONDS}s)`);
 });

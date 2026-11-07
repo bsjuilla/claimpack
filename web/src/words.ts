@@ -48,7 +48,13 @@ export const when = (iso?: string | null) => {
   const hhmm = zoned ? new Date(t).toISOString().slice(11, 16) + " UTC" : iso.slice(11, 16);
   return `${day(zoned ? iso : iso.slice(0, 10))}, ${hhmm}`;
 };
-export const daysLeft = (iso?: string | null) => (iso ? Math.floor((Date.parse(iso) - Date.now()) / 86_400_000) : null);
+// Demo mode runs on the evaluation's clock, so deadlines read as they did when the set was scored.
+let clockOffset = 0;
+/** True when the server runs npm run demo: PayPal is simulated. */
+export let DEMO = false;
+export const setDemo = (v: boolean | undefined) => { DEMO = !!v; };
+export const setClock = (iso: string | null | undefined) => { clockOffset = iso ? Date.parse(iso) - Date.now() : 0; };
+export const daysLeft = (iso?: string | null) => (iso ? Math.floor((Date.parse(iso) - (Date.now() + clockOffset)) / 86_400_000) : null);
 
 export const PROTECTION_WORD: Record<string, string> = {
   LIKELY: "Seller Protection: likely to apply",

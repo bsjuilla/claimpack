@@ -35,7 +35,7 @@ export function Queue() {
   ], []);
 
   const waiting = (rows ?? []).filter((r) => r.canFile);
-  const next = waiting.map((r) => daysLeft(r.due)).filter((d): d is number => d !== null).sort((a, b) => a - b)[0];
+  const next = waiting.map((r) => daysLeft(r.due)).filter((d): d is number => d !== null && d >= 0).sort((a, b) => a - b)[0];
   const byCurrency = new Map<string, number>();
   for (const r of rows ?? []) if (r.status !== "RESOLVED") byCurrency.set(r.currency, (byCurrency.get(r.currency) ?? 0) + Number(r.amount));
 
@@ -50,7 +50,7 @@ export function Queue() {
             <div className="figures">
               <div><b>{[...byCurrency].map(([c, v]) => money(String(v), c)).join(" + ") || "0.00"}</b><span>in open disputes</span></div>
               <div><b>{waiting.length}</b><span>waiting for your evidence</span></div>
-              <div><b className={next !== undefined && next <= 3 ? "urgent" : undefined}>{next === undefined ? "None" : next < 0 ? "Passed" : `${next} day${next === 1 ? "" : "s"}`}</b><span>to the next deadline</span></div>
+              <div><b className={next !== undefined && next <= 3 ? "urgent" : undefined}>{next === undefined ? "None" : `${next} day${next === 1 ? "" : "s"}`}</b><span>to the next deadline</span></div>
             </div>
           )}
         </div>

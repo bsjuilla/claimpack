@@ -229,3 +229,7 @@ pre.request { font: 400 12.5px/1.55 var(--mono); background: var(--sunk); border
 .cites .src { font-size: 13px; color: var(--ink-3); }
 .cites .src q { font-family: var(--serif); background: linear-gradient(transparent 58%, var(--mark-wash) 58%); color: var(--ink-2); }
 .load-error { border-left: 3px solid var(--conflict); background: var(--conflict-wash); padding: 12px 16px; border-radius: 0 var(--r-1) var(--r-1) 0; margin-bottom: 16px; font-size: 14px; }
+
+/* demo mode: say plainly that nothing here touches PayPal or the model */
+.demo-band { background: var(--mark-wash); border-bottom: 1px solid var(--line); padding: 10px 24px; font-size: 14px; color: var(--ink-2); }
+.demo-band b { color: var(--ink); }

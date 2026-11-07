@@ -49,7 +49,7 @@ export interface CaseView {
 }
 
 export interface StatementCheck { ok: boolean; problems: { sentence: string; problem: string }[]; notes: string }
-export interface Draft { statement: string; check: StatementCheck; attempts: number; costUsd: number; planHash: string }
+export interface Draft { statement: string; check: StatementCheck; attempts: number; costUsd: number; planHash: string; replayed?: boolean }
 export interface PaymentRow { txId: string; orderId?: string; invoiceId?: string; amount?: string; currency?: string; payer?: string; capturedAt?: string; armedAt: string; docs: number; disputeId: string | null }
 
 export type { Check, Fact };

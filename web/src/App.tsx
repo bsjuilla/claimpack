@@ -3,6 +3,7 @@ import { get, post } from "./api";
 import { Queue } from "./Queue";
 import { CaseView } from "./CaseView";
 import { Payments, PaymentLocker } from "./Payments";
+import { setClock, setDemo } from "./words";
 
 type Toast = { text: string; error?: boolean } | null;
 const ToastCtx = createContext<(t: Toast) => void>(() => {});
@@ -31,11 +32,11 @@ function Mark() {
 export function App() {
   const hash = useHash();
   const [toast, setToast] = useState<Toast>(null);
-  const [health, setHealth] = useState<{ paypal: string; webhookConfigured: boolean; ai: boolean } | null>(null);
+  const [health, setHealth] = useState<{ paypal: string; webhookConfigured: boolean; ai: boolean; demo?: boolean; now?: string | null } | null | undefined>(undefined);
   const [watch, setWatch] = useState<{ pollSeconds: number; webhook: boolean } | null>(null);
   const show = useCallback((t: Toast) => { setToast(t); if (t) setTimeout(() => setToast((cur) => (cur === t ? null : cur)), t.error ? 7000 : 3500); }, []);
   useEffect(() => {
-    get<typeof health>("/api/health").then(setHealth).catch(() => setHealth(null));
+    get<NonNullable<typeof health>>("/api/health").then((h) => { setClock(h.now); setDemo(h.demo); setHealth(h); }).catch(() => setHealth(null));
     get<typeof watch>("/api/watch").then(setWatch).catch(() => setWatch(null));
   }, []);
   const watching = !!watch && (watch.webhook || watch.pollSeconds > 0);
@@ -59,11 +60,12 @@ export function App() {
         <span className="spacer" />
         <span className="env" title={watch?.webhook ? "PayPal sends notifications to ClaimPack" : watch?.pollSeconds ? `ClaimPack checks PayPal every ${watch.pollSeconds} seconds` : "Use Sync with PayPal to check for disputes"}>
           <span className={`dot${watching ? " live" : " off"}`} />
-          {!health ? "Server offline" : `${watching ? "Watching " : ""}PayPal ${health.paypal === "sandbox" ? "sandbox" : "live"}`}
+          {health === undefined ? "" : !health ? "Server offline" : health.demo ? "Simulated PayPal (demo)" : `${watching ? "Watching " : ""}PayPal ${health.paypal === "sandbox" ? "sandbox" : "live"}`}
         </span>
         <SyncButton />
       </header>
-      <main id="main">{page}</main>
+      {health?.demo && <div className="demo-band" role="note"><b>Demo mode.</b> No keys used. These are the 30 synthetic disputes from the published evaluation, with the readings Muse Spark returned for them. Filing goes to a simulated PayPal that checks the request like the real API. The clock is set to {new Date(health.now ?? "").toUTCString().slice(5, 16)}, when the set was scored.</div>}
+      <main id="main">{health === undefined ? null : page}</main>
       {toast && <div className={`toast${toast.error ? " error" : ""}`} role="status">{toast.text}</div>}
     </ToastCtx.Provider>
   );

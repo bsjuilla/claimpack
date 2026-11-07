@@ -3,10 +3,11 @@ import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
 import { get, post, onServerChange, ApiError, type CaseView as Case, type Check, type Draft, type Fact, type StatementCheck } from "./api";
 import { useToast } from "./App";
+import { sentences } from "../../src/rules/statement";
 import { gridTheme } from "./grid";
 import { Locker } from "./Locker";
 import { Cutout } from "./Cutout";
-import { EVIDENCE_WORD, KIND_WORD, PROTECTION_WORD, REASON_LABEL, STAGE_WORD, STATUS_WORD, VERDICT_WORD, day, money, when } from "./words";
+import { EVIDENCE_WORD, KIND_WORD, PROTECTION_WORD, REASON_LABEL, STAGE_WORD, STATUS_WORD, VERDICT_WORD, DEMO, day, money, when } from "./words";
 
 export function CaseView({ id }: { id: string }) {
   const toast = useToast();
@@ -162,7 +163,7 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
 
   async function draft() {
     setBusy("draft");
-    try { const r = await post<Draft>(`/api/disputes/${encodeURIComponent(id)}/draft`); setStatement(r.statement); setCheck(r.check); toast({ text: `Drafted with Muse Spark (${(r.costUsd * 100).toFixed(1)}¢). Each sentence is checked against the words it cites.` }); }
+    try { const r = await post<Draft>(`/api/disputes/${encodeURIComponent(id)}/draft`); setStatement(r.statement); setCheck(r.check); toast({ text: r.replayed ? "The statement Muse Spark drafted for this case in the published run, checked again here." : `Drafted with Muse Spark (${(r.costUsd * 100).toFixed(1)}¢). Each sentence is checked against the words it cites.` }); }
     catch (e) { toast({ text: (e as Error).message, error: true }); }
     finally { setBusy(""); }
   }
@@ -171,7 +172,7 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
     try {
       const r = await post<{ ok: boolean; case: Case }>(`/api/disputes/${encodeURIComponent(id)}/file`, { statement, approvedBy: name, planHash: kase.planHash });
       onFiled(r.case);
-      toast({ text: "Evidence filed with PayPal." });
+      toast({ text: DEMO ? "Filed with the simulated PayPal (demo mode). Nothing was sent anywhere." : "Evidence filed with PayPal." });
     } catch (e) {
       const body = e instanceof ApiError ? e.body : null;
       if (body?.problems) setCheck({ ok: false, problems: body.problems, notes: check?.notes ?? "" });
@@ -184,7 +185,7 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
       <h2 id="file-h">Statement to PayPal and approval</h2>
       {kase.filings.length > 0 && kase.filings.map((f) => (
         <div key={f.id} className={`filed${f.status === 200 ? "" : " failed"}`}>
-          {f.status === 200 ? <b>Filed with PayPal</b> : <b>PayPal refused this filing ({f.status})</b>} on {new Date(f.at).toLocaleString("en-GB")}, approved by {f.approved_by}. Sent {f.files.map((x) => x.name).join(", ")}.
+          {f.status === 200 ? <b>Filed with PayPal{DEMO ? " (simulated, demo mode)" : ""}</b> : <b>PayPal refused this filing ({f.status})</b>} on {new Date(f.at).toLocaleString("en-GB")}, approved by {f.approved_by}. Sent {f.files.map((x) => x.name).join(", ")}.
           {f.status !== 200 && f.response?.details && <> PayPal said: <span className="mono">{f.response.details.map((x: any) => x.issue).join(", ")}</span></>}
         </div>
       ))}
@@ -217,7 +218,7 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
               <p className="passed" style={{ marginTop: 8 }}>Every sentence cites a document, and every number, date and claim word in it appears in what it cites. This is a word-level check, so read each sentence beside its words below.</p>
               <ul className="cites">{citedSentences(statement, aliased).map((s, i) => (
                 <li key={i}><span className="said">{s.text}</span>
-                  {s.facts.map((f) => <span className="src" key={f.id}>[{f.id}] {docName.get(f.cite.docId) ?? f.cite.docId}: <q>{f.cite.quote}</q></span>)}</li>
+                  {s.facts.map((f) => <span className="src" key={f.id}>[{f.id}] {docName.get(f.cite.docId) ?? f.cite.docId}: <q>{f.cite.quote}</q>{readAs(f) && <> · read as {readAs(f)}</>}</span>)}</li>
               ))}</ul>
             </>
             : <ul className="problems">{check.problems.map((p, i) => <li key={i}>{p.problem}{p.sentence && <>: <span>“{p.sentence}”</span></>}</li>)}</ul>)}
@@ -244,7 +245,15 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
 /** Split the statement into sentences and attach the facts each one cites, so the approver reads claim and source side by side. */
 function citedSentences(statement: string, facts: Fact[]) {
   const byAlias = new Map(facts.map((f) => [f.id, f]));
-  return (statement.match(/[^.!?]+(?:[.!?]+(?:\s*\[F\d+\](?:\s*\[F\d+\])*)?|$)/g) ?? [])
+  // The guard's own splitter, so the approver sees the same sentences the guard checked.
+  return sentences(statement)
     .map((t) => t.trim()).filter(Boolean)
     .map((text) => ({ text, facts: [...new Set([...text.matchAll(/\[(F\d+)\]/g)].map((m) => m[1]))].map((a) => byAlias.get(a)).filter(Boolean) as Fact[] }));
+}
+
+/** The values the reader took from a document, beyond the quote: the guard compares sentences against these too. */
+function readAs(f: Fact): string {
+  const { id: _i, kind: _k, cite: _c, ...rest } = f as Record<string, unknown>;
+  return Object.values(rest).flatMap((v) => (v && typeof v === "object" ? Object.values(v as object) : [v]))
+    .filter((v) => v !== undefined && v !== null && v !== "").map(String).join(", ");
 }
