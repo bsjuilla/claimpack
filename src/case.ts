@@ -15,19 +15,26 @@ export function engineDoc(d: StoredDoc): EvidenceDoc {
     : { id: d.id, name: d.name, mime: d.mime, bytes: d.bytes, sha256: d.sha256, quarantined: d.quarantined };
 }
 
-/** PayPal's own view of money held or returned on this payment. Only COMPLETED refunds count as evidence. */
-export async function refundsFor(pp: PayPal, txId: string): Promise<VerifiedRefund[]> {
-  try { return await pp.refundsForCapture(txId); } catch { return []; }
+const refundCache = new Map<string, { at: number; value: VerifiedRefund[] }>();
+/** PayPal's own view of money held or returned on this payment. Only COMPLETED refunds count as evidence.
+ * Cached for a minute (every statement check rebuilds the case and PayPal takes seconds); refresh and filing pass fresh. */
+export async function refundsFor(pp: PayPal, txId: string, fresh = false): Promise<VerifiedRefund[]> {
+  const hit = refundCache.get(txId);
+  if (!fresh && hit && Date.now() - hit.at < 60_000) return hit.value;
+  let value: VerifiedRefund[] = [];
+  try { value = await pp.refundsForCapture(txId); } catch { /* PayPal unreachable: no refunds proven */ }
+  refundCache.set(txId, { at: Date.now(), value });
+  return value;
 }
 
-export async function buildCase(store: Store, pp: PayPal, disputeId: string, opts: { now?: string } = {}) {
+export async function buildCase(store: Store, pp: PayPal, disputeId: string, opts: { now?: string; fresh?: boolean } = {}) {
   const raw = store.dispute(disputeId);
   if (!raw) throw new Error(`Unknown dispute ${disputeId}. Sync with PayPal first.`);
   const dispute = toDisputeCase(raw);
   const docs = store.docs(dispute.transaction.id);
   const reads = docs.map((d) => ({ doc: d, read: store.read(d.id) }));
   const facts: Fact[] = reads.flatMap((r) => r.read?.facts ?? []);
-  const refunds = await refundsFor(pp, dispute.transaction.id);
+  const refunds = await refundsFor(pp, dispute.transaction.id, opts.fresh);
   const plan = planPack({ dispute, facts, docs: docs.map(engineDoc), verifiedRefunds: refunds, now: opts.now });
   const held = refunds.filter((r) => r.status === "PENDING");
   return {

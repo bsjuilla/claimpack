@@ -77,7 +77,8 @@ export function checkStatement(draft: string, facts: Fact[], usedFactIds: string
     const bad = ids.filter((id) => !usedFactIds.includes(id) || !byId.has(id));
     if (bad.length) problems.push({ sentence: text, problem: `cites ${bad.join(", ")}, which is not part of this evidence pack` });
     const cited = ids.map((id) => byId.get(id)).filter(Boolean) as Fact[];
-    const hay = known + " " + flat(cited.map((f) => JSON.stringify(f)).join(" "));
+    // Only what the documents say counts: never internal ids (a document id like "d0975f…be9" must not vouch for a "9").
+    const hay = known + " " + flat(cited.map((f) => JSON.stringify({ ...f, id: undefined, cite: { quote: f.cite.quote, page: f.cite.page } })).join(" "));
     const nums = numberTokens(hay);
     const report = text;
 

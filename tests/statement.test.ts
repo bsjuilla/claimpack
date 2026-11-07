@@ -92,3 +92,13 @@ describe("sentence splitting", () => {
     expect(sentences("Sent e.g. by email. [F1] Then opened [F2].")).toEqual(["Sent e.g. by email. [F1]", "Then opened [F2]."]);
   });
 });
+
+describe("statement guard: internal ids never vouch for numbers", () => {
+  it("a digit inside the document's internal id does not support a number in the statement", () => {
+    const fx: Fact[] = [{ id: "F1", kind: "delivery", method: "digital", at: "2026-11-05T16:07:00Z", detail: "downloaded",
+      cite: { docId: "d0975f4d53be9", quote: "2026-11-05 16:07 UTC logo-final.zip downloaded (1 of 2)" } }];
+    const r = checkStatement("The files were downloaded 9 times [F1].", fx, ["F1"], dispute, [{ id: "d0975f4d53be9", name: "log.pdf", mime: "application/pdf", bytes: 1, sha256: "" }]);
+    expect(r.ok).toBe(false);
+    expect(r.problems[0].problem).toMatch(/"9"/);
+  });
+});

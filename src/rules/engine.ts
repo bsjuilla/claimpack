@@ -69,6 +69,7 @@ export function planPack(input: EngineInput): PackPlan {
 
   // 1. Documents: quarantined or unsendable files are never used.
   const docById = new Map(docs.map((x) => [x.id, x]));
+  const docName = (id: string) => docById.get(id)?.name ?? id;
   const quarantined = docs.filter((x) => x.quarantined);
   if (quarantined.length)
     add({ id: "quarantine", label: "Documents with instructions aimed at an AI were set aside", status: "warn", required: false,
@@ -83,12 +84,12 @@ export function planPack(input: EngineInput): PackPlan {
     const person = sameBuyer(personOf(f), d.transaction);
     if (order === false || (order === undefined && person === false)) {
       add({ id: `foreign-${f.id}`, label: "Document about a different order was set aside", status: "warn", required: false,
-        detail: `${f.cite.docId}: ${order === false ? `refers to order "${refOf(f)}"` : `names "${personOf(f)}"`}, not this payment (${d.transaction.id}${d.transaction.invoiceId ? ` / ${d.transaction.invoiceId}` : ""}).`, factIds: [f.id] });
+        detail: `${docName(f.cite.docId)}: ${order === false ? `refers to order "${refOf(f)}"` : `names "${personOf(f)}"`}, not this payment (${d.transaction.id}${d.transaction.invoiceId ? ` / ${d.transaction.invoiceId}` : ""}).`, factIds: [f.id] });
       continue;
     }
     if (order === true && person === false) {
       add({ id: `who-${f.id}`, label: "Same order, different person", status: "conflict", required: true,
-        detail: `${f.cite.docId} matches this order but names "${personOf(f)}", while PayPal's buyer is ${d.transaction.buyerName ?? d.transaction.buyerEmail}.`, factIds: [f.id] });
+        detail: `${docName(f.cite.docId)} matches this order but names "${personOf(f)}", while PayPal's buyer is ${d.transaction.buyerName ?? d.transaction.buyerEmail}.`, factIds: [f.id] });
     }
     facts.push(f);
   }
@@ -98,23 +99,23 @@ export function planPack(input: EngineInput): PackPlan {
   for (const inv of of("invoice")) {
     if (inv.amount && (inv.amount.currency !== d.transaction.amount.currency || Math.abs(money(inv.amount) - money(d.transaction.amount)) > 1))
       add({ id: `amount-${inv.id}`, label: "Invoice amount differs from what PayPal charged", status: "conflict", required: true,
-        detail: `${inv.cite.docId} says ${inv.amount.value} ${inv.amount.currency}; PayPal charged ${d.transaction.amount.value} ${d.transaction.amount.currency}.`, factIds: [inv.id] });
+        detail: `${docName(inv.cite.docId)} says ${inv.amount.value} ${inv.amount.currency}; PayPal charged ${d.transaction.amount.value} ${d.transaction.amount.currency}.`, factIds: [inv.id] });
   }
   const verified = (input.verifiedRefunds ?? []).filter((r) => r.captureId === d.transaction.id && r.status === "COMPLETED");
   for (const r of of("refund")) {
     if (!verified.some((v) => v.id === r.refundId))
       add({ id: `refund-${r.id}`, label: "Refund ID not found in PayPal for this payment", status: "conflict", required: true,
-        detail: `${r.cite.docId} mentions refund "${r.refundId}", but PayPal has no completed refund with that ID for ${d.transaction.id}.`, factIds: [r.id] });
+        detail: `${docName(r.cite.docId)} mentions refund "${r.refundId}", but PayPal has no completed refund with that ID for ${d.transaction.id}.`, factIds: [r.id] });
   }
   for (const f of [...of("delivery"), ...of("tracking")]) {
     const at = t(f.at);
     if (Number.isNaN(at)) continue;
     if (at < t(d.transaction.createTime) - DAY)
       add({ id: `early-${f.id}`, label: "Delivered before the payment", status: "warn", required: false,
-        detail: `${f.cite.docId} dates delivery ${f.at!.slice(0, 10)}, before the payment on ${d.transaction.createTime.slice(0, 10)}. Fine for a service billed afterwards; otherwise check the document.`, factIds: [f.id] });
+        detail: `${docName(f.cite.docId)} dates delivery ${f.at!.slice(0, 10)}, before the payment on ${d.transaction.createTime.slice(0, 10)}. Fine for a service billed afterwards; otherwise check the document.`, factIds: [f.id] });
     if (at > t(d.createTime))
       add({ id: `late-${f.id}`, label: "Delivered after the buyer opened the dispute", status: "warn", required: false,
-        detail: `${f.cite.docId} dates delivery ${f.at!.slice(0, 10)}; the dispute opened ${d.createTime.slice(0, 10)}. Still proof of delivery, but expect the buyer to question it.`, factIds: [f.id] });
+        detail: `${docName(f.cite.docId)} dates delivery ${f.at!.slice(0, 10)}; the dispute opened ${d.createTime.slice(0, 10)}. Still proof of delivery, but expect the buyer to question it.`, factIds: [f.id] });
   }
 
   // 4. Choose the evidence type: a refund PayPal can confirm beats everything; otherwise PayPal's list for the reason.

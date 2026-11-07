@@ -6,7 +6,7 @@ import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono, type Context } from "hono";
 import { streamSSE } from "hono/streaming";
-import { buildCase, engineDoc, hashPlan, pdfName } from "../src/case";
+import { buildCase, engineDoc, pdfName } from "../src/case";
 import { aliasUsed, draftStatement } from "../src/ai/drafter";
 import { makeClient, readDocument } from "../src/ai/reader";
 import { evidenceForm, evidenceInput, type EvidenceFile } from "../src/paypal/evidence";
@@ -16,6 +16,7 @@ import { checkStatement } from "../src/rules/statement";
 import { DATA, Store } from "../src/store";
 
 const ROOT = join(import.meta.dirname, "..");
+process.chdir(ROOT); // static files and data resolve from the repo, whoever starts the server
 loadEnv(ROOT);
 const PORT = Number(process.env.PORT || 8790);
 const HOST = "127.0.0.1";
@@ -89,11 +90,40 @@ app.get("/api/disputes/:id", async (c) => {
 app.post("/api/disputes/:id/refresh", async (c) => {
   const id = c.req.param("id");
   if (!DISPUTE_ID.test(id)) return c.json({ error: "Bad dispute id." }, 400);
-  try { await syncDispute(id); broadcast("dispute", id); return c.json(await buildCase(store, pp, id)); } catch (e) { return fail(c, e); }
+  try { await syncDispute(id); broadcast("dispute", id); return c.json(await buildCase(store, pp, id, { fresh: true })); } catch (e) { return fail(c, e); }
 });
 
 // ---- the evidence locker (per payment) ----
-app.get("/api/payments", (c) => c.json(store.payments().map((p) => ({ ...p, docs: store.docs(p.txId).length }))));
+app.get("/api/payments", (c) => {
+  const disputeOf = new Map(store.disputes().map((d) => [d.disputed_transactions?.[0]?.seller_transaction_id, d.dispute_id]));
+  return c.json(store.payments().map((p) => ({ ...p, docs: store.docs(p.txId).length, disputeId: disputeOf.get(p.txId) ?? null })));
+});
+
+app.get("/api/payments/:txId", (c) => {
+  const txId = c.req.param("txId");
+  if (!TX_ID.test(txId)) return c.json({ error: "Bad transaction id." }, 400);
+  const disputeId = store.disputes().find((d) => d.disputed_transactions?.[0]?.seller_transaction_id === txId)?.dispute_id ?? null;
+  return c.json({ payment: store.payment(txId) ?? { txId }, disputeId,
+    docs: store.docs(txId).map((d) => ({ ...engineDoc(d), originalName: d.name, originalMime: d.mime, addedAt: d.addedAt, read: store.read(d.id) ?? null })) });
+});
+
+// Reading can also happen before any dispute exists ("pre-armed" locker).
+app.post("/api/payments/:txId/read", async (c) => {
+  const txId = c.req.param("txId");
+  if (!TX_ID.test(txId)) return c.json({ error: "Bad transaction id." }, 400);
+  try {
+    const { client, model } = makeClient();
+    let cost = 0;
+    for (const d of store.docs(txId)) {
+      if (store.read(d.id)) continue;
+      const r = await readDocument(client, model, d.id, d.path);
+      store.saveRead({ docId: d.id, facts: r.facts, dropped: r.dropped, docType: r.output.document_type, quarantineQuote: r.output.addressed_to_reader ? (r.output.addressed_to_reader_quote ?? "(text addressed to an AI)") : undefined, costUsd: r.costUsd, readAt: new Date().toISOString() });
+      cost += r.costUsd;
+    }
+    broadcast("docs", txId);
+    return c.json({ costUsd: cost });
+  } catch (e) { return fail(c, e); }
+});
 
 app.post("/api/payments/:txId/docs", async (c) => {
   const txId = c.req.param("txId");
@@ -179,7 +209,7 @@ app.post("/api/disputes/:id/file", async (c) => {
   try {
     const body = await c.req.json<{ statement: string; approvedBy: string; planHash: string }>();
     if (!body.approvedBy?.trim()) return c.json({ error: "Type your name to approve." }, 400);
-    const kase = await buildCase(store, pp, id);
+    const kase = await buildCase(store, pp, id, { fresh: true });
     if (body.planHash !== kase.planHash) return c.json({ error: "The evidence changed since you reviewed it. Review it again before filing." }, 409);
     if (kase.plan.verdict !== "READY") return c.json({ error: `The pack is ${kase.plan.verdict}; ClaimPack only files READY packs.` }, 409);
     if (!kase.plan.canFileNow) return c.json({ error: "PayPal is not accepting evidence on this dispute right now." }, 409);
@@ -208,6 +238,16 @@ app.post("/api/disputes/:id/file", async (c) => {
     await syncDispute(id);
     broadcast("dispute", id);
     return c.json({ ok: true, case: await buildCase(store, pp, id) });
+  } catch (e) { return fail(c, e); }
+});
+
+// The guard on its own (no AI call): lets the seller edit the statement and see at once whether it would pass.
+app.post("/api/disputes/:id/check-statement", async (c) => {
+  try {
+    const { statement } = await c.req.json<{ statement: string }>();
+    const kase = await buildCase(store, pp, c.req.param("id"));
+    const aliasFacts = aliasUsed(kase.facts, kase.plan);
+    return c.json(checkStatement(statement ?? "", aliasFacts, aliasFacts.map((f) => f.id), kase.dispute, store.docs(kase.dispute.transaction.id).map(engineDoc)));
   } catch (e) { return fail(c, e); }
 });
 
