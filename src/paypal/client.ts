@@ -69,8 +69,15 @@ export class PayPal {
     const orderId = cap?.supplementary_data?.related_ids?.order_id;
     if (!orderId) return [];
     const order: any = await this.getOrder(orderId);
-    return (order.purchase_units ?? []).flatMap((u: any) => u.payments?.refunds ?? [])
-      .map((r: any) => ({ id: r.id, captureId, amount: { value: r.amount?.value, currency: r.amount?.currency_code }, status: r.status }));
+    // A refund belongs to this capture only if PayPal says so: its "up" link names the capture, or, without that link,
+    // it sits in a purchase unit whose only capture is this one. Otherwise it is not counted (review A01).
+    return (order.purchase_units ?? []).flatMap((u: any) => {
+      const captures: string[] = (u.payments?.captures ?? []).map((c: any) => c.id);
+      return (u.payments?.refunds ?? []).filter((r: any) => {
+        const up = (r.links ?? []).find((l: any) => l.rel === "up")?.href?.match(/captures\/([A-Z0-9]+)/i)?.[1];
+        return up ? up === captureId : captures.length === 1 && captures[0] === captureId;
+      });
+    }).map((r: any) => ({ id: r.id, captureId, amount: { value: r.amount?.value, currency: r.amount?.currency_code }, status: r.status }));
   }
 
   /** Asks PayPal whether a webhook delivery really came from PayPal. */

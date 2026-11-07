@@ -46,7 +46,7 @@ describe("statement guard", () => {
 });
 
 describe("provide-evidence request", () => {
-  const plan: PackPlan = { verdict: "READY", evidenceType: "PROOF_OF_FULFILLMENT", evidenceInfo: {}, usedFactIds: ["F1"], documentIds: ["d1"], checks: [], completeness: 100, canFileNow: true, reasons: [] };
+  const plan: PackPlan = { verdict: "READY", evidenceType: "PROOF_OF_FULFILLMENT", evidenceInfo: {}, usedFactIds: ["F1"], documentIds: ["d1"], checks: [], completeness: 100, canFileNow: true, reasons: [], evidenceFingerprint: "x", protection: { level: "NOT_ASSESSED", reasons: [] } };
   it("matches the shape the sandbox accepted, with no tracking info invented", () => {
     const input = evidenceInput(plan, "Delivered (see delivery-log.pdf).", [{ name: "delivery-log.pdf", mime: "application/pdf", data: new Uint8Array() }]);
     expect(input).toEqual({ evidences: [{ evidence_type: "PROOF_OF_FULFILLMENT", evidence_info: {}, documents: [{ name: "delivery-log.pdf" }], notes: "Delivered (see delivery-log.pdf)." }] });

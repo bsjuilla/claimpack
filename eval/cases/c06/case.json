@@ -40,8 +40,7 @@
   }
  ],
  "gold": {
-  "verdict": "READY",
-  "evidenceType": "PROOF_OF_FULFILLMENT",
+  "verdict": "INCOMPLETE",
   "carrier": "UPS"
  }
 }

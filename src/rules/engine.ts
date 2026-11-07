@@ -1,7 +1,8 @@
 // The rules engine: decides, from PayPal's published rules and PayPal's own records, what can be filed for a dispute.
 // It never asks a model anything. Facts come from the reader (with quotes); this code decides what they are worth.
+import { createHash } from "node:crypto";
 import type { Check, Cite, DisputeCase, EvidenceDoc, EvidenceType, Fact, Money, PackPlan } from "../types";
-import { resolveLooseDate } from "./dates";
+import { looseDateReadings, resolveLooseDate } from "./dates";
 import { ALLOWED_EVIDENCE, ALLOWED_MIME, MAX_CALL_BYTES, MAX_FILE_BYTES, PROVIDE_EVIDENCE_REL } from "./paypalRules";
 
 /** A refund PayPal itself reports for this payment (looked up by the server, never read from a document). */
@@ -23,6 +24,10 @@ export interface EngineInput {
 const DAY = 86_400_000;
 const norm = (s: string) => s.toLowerCase().replace(/^#/, "").replace(/[\s\-_.#]/g, "");
 const money = (m: Money) => Math.round(Number(m.value) * 100);
+/** A money value ClaimPack can trust to compare: plain digits with at most two decimals ("120.00.99" is not). */
+export const validMoney = (m?: Money) => !!m && /^\d{1,9}(\.\d{1,2})?$/.test(m.value) && /^[A-Z]{3}$/.test(m.currency);
+/** A delivery record that says the delivery did not happen is not proof of delivery (adversarial review E12, R01). */
+export const DELIVERY_FAILED = /\b(fail(ed|s|ure)?|bounced|undeliver\w*|not\s+(been\s+)?deliver\w*|never\s+(accessed|opened|downloaded|received|arrived)|returned\s+to\s+sender|refused|rejected|expired|lost\s+in\s+transit|cancel+ed)\b/i;
 const t = (iso?: string) => (iso ? Date.parse(iso) : NaN);
 const words = (s: string) => new Set(s.toLowerCase().split(/[^a-z0-9@.]+/).filter((w) => w.length > 1));
 
@@ -32,9 +37,11 @@ export function sameBuyer(who: string | undefined, d: DisputeCase["transaction"]
   const w = who.toLowerCase();
   if (d.buyerEmail && w.includes(d.buyerEmail.toLowerCase())) return true;
   if (d.buyerName) {
+    // Every word of the shorter name must be in the longer one: "John Doe" matches "John Michael Doe", but
+    // "John Michael Roe" does not (sharing two words is not enough; adversarial review E03).
     const a = words(who), b = words(d.buyerName);
-    const shared = [...b].filter((x) => a.has(x)).length;
-    if (shared >= Math.min(2, b.size)) return true;
+    const [small, big] = a.size <= b.size ? [a, b] : [b, a];
+    if (small.size >= Math.min(2, b.size) && [...small].every((x) => big.has(x))) return true;
   }
   return false;
 }
@@ -81,12 +88,25 @@ export function planPack(input: EngineInput): PackPlan {
   const facts: Fact[] = [];
   for (let f of input.facts) {
     if (!usableDoc(f.cite.docId)) continue;
+    // Dates must be real dates (adversarial review E07, R02): an unreadable one is treated as missing.
+    if ((f.kind === "delivery" || f.kind === "tracking") && f.at && Number.isNaN(Date.parse(f.at))) f = { ...f, at: f.kind === "delivery" ? "" : undefined } as Fact;
     if (f.kind === "delivery" && !f.at) {
       const at = f.atText ? resolveLooseDate(f.atText, d.transaction.createTime) : undefined;
-      if (!at) continue; // a delivery with no readable date proves nothing
+      if (!at) {
+        add({ id: `nodate-${f.id}`, label: "Delivery record without a readable date was set aside", status: "warn", required: false,
+          detail: `${docName(f.cite.docId)}: "${f.cite.quote.slice(0, 60)}" has no date ClaimPack can read, so it is not used as proof.`, factIds: [f.id] });
+        continue;
+      }
+      const readings = looseDateReadings(f.atText!, d.transaction.createTime);
       add({ id: `date-${f.id}`, label: "Date written without a year", status: "warn", required: false,
-        detail: `${docName(f.cite.docId)} says "${f.atText!.slice(0, 40)}"; ClaimPack read it as ${at.slice(0, 10)}, the reading nearest the payment on ${d.transaction.createTime.slice(0, 10)}. Check it before filing.`, factIds: [f.id] });
+        detail: `${docName(f.cite.docId)} says "${f.atText!.slice(0, 40)}"; ClaimPack read it as ${at.slice(0, 10)}, the reading nearest the payment on ${d.transaction.createTime.slice(0, 10)}` +
+          (readings.length > 1 ? ` (it could also be read as ${readings.filter((r) => r !== at.slice(0, 10)).join(" or ")})` : "") + ". Check it before filing.", factIds: [f.id] });
       f = { ...f, at };
+    }
+    if ((f.kind === "delivery" || f.kind === "tracking") && DELIVERY_FAILED.test(`${f.cite.quote} ${"detail" in f ? f.detail : ""}`)) {
+      add({ id: `failed-${f.id}`, label: "A record says the delivery did not succeed", status: "warn", required: false,
+        detail: `${docName(f.cite.docId)}: "${f.cite.quote.slice(0, 80)}". It is not used as proof of delivery.`, factIds: [f.id] });
+      continue;
     }
     const order = sameOrder(refOf(f), d.transaction);
     const person = sameBuyer(personOf(f), d.transaction);
@@ -105,11 +125,25 @@ export function planPack(input: EngineInput): PackPlan {
 
   // 3. Checks against PayPal's records that apply whatever the evidence type.
   for (const inv of of("invoice")) {
-    if (inv.amount && (inv.amount.currency !== d.transaction.amount.currency || Math.abs(money(inv.amount) - money(d.transaction.amount)) > 1))
+    if (inv.amount && !validMoney(inv.amount))
+      add({ id: `amount-${inv.id}`, label: "Invoice amount could not be read", status: "conflict", required: true,
+        detail: `${docName(inv.cite.docId)} gives the amount as "${inv.amount.value} ${inv.amount.currency}", which is not a valid amount. Check the document.`, factIds: [inv.id] });
+    else if (inv.amount && (inv.amount.currency !== d.transaction.amount.currency || money(inv.amount) !== money(d.transaction.amount)))
       add({ id: `amount-${inv.id}`, label: "Invoice amount differs from what PayPal charged", status: "conflict", required: true,
         detail: `${docName(inv.cite.docId)} says ${inv.amount.value} ${inv.amount.currency}; PayPal charged ${d.transaction.amount.value} ${d.transaction.amount.currency}.`, factIds: [inv.id] });
   }
-  const verified = (input.verifiedRefunds ?? []).filter((r) => r.captureId === d.transaction.id && r.status === "COMPLETED");
+  // Refunds PayPal confirms for THIS payment, completed, in the dispute's currency, counted once each (reviews E10, E11, B2, B3).
+  const seen = new Set<string>();
+  const verified = (input.verifiedRefunds ?? []).filter((r) => {
+    if (r.captureId !== d.transaction.id || r.status !== "COMPLETED" || !validMoney(r.amount) || seen.has(r.id)) return false;
+    seen.add(r.id);
+    if (r.amount.currency !== d.amount.currency) {
+      add({ id: `refund-currency-${r.id}`, label: "Refund in a different currency", status: "warn", required: false,
+        detail: `PayPal refund ${r.id} is ${r.amount.value} ${r.amount.currency}; the dispute is in ${d.amount.currency}, so it is not counted.`, factIds: [] });
+      return false;
+    }
+    return true;
+  });
   for (const r of of("refund")) {
     if (!verified.some((v) => v.id === r.refundId))
       add({ id: `refund-${r.id}`, label: "Refund ID not found in PayPal for this payment", status: "conflict", required: true,
@@ -133,7 +167,8 @@ export function planPack(input: EngineInput): PackPlan {
   const evidenceInfo: PackPlan["evidenceInfo"] = {};
   const used: string[] = [];
 
-  if (verified.length && (refunded >= money(d.amount) || d.reason === "INCORRECT_AMOUNT")) {
+  // A refund proves the case only if it covers what is disputed (for a wrong amount, the dispute amount is the difference).
+  if (verified.length && refunded >= money(d.amount)) {
     type = "PROOF_OF_REFUND";
     evidenceInfo.refund_ids = verified.map((r) => r.id);
     used.push(...of("refund").filter((r) => verified.some((v) => v.id === r.refundId)).map((r) => r.id));
@@ -177,6 +212,12 @@ export function planPack(input: EngineInput): PackPlan {
     else if (daysLeft <= 3) add({ id: "deadline", label: `Only ${daysLeft} day(s) left to respond`, status: "warn", required: false, detail: `PayPal's deadline is ${d.sellerResponseDue.slice(0, 10)}.`, factIds: [] });
   }
 
+  // 6b. Stage. PayPal lists provide-evidence as a claim-stage action; in the inquiry stage it is offered by the sandbox,
+  // but the buyer and seller are expected to settle first (reviews G1).
+  if (d.stage === "INQUIRY")
+    add({ id: "stage-inquiry", label: "Inquiry stage: you can still settle with the buyer", status: "warn", required: false,
+      detail: "PayPal is not deciding yet. A message or a refund offer may end it sooner; evidence filed now is what PayPal reads if it becomes a claim.", factIds: [] });
+
   // 7. Verdict. Code decides; nothing here depends on how confident a model sounded.
   const req = checks.filter((c) => c.required);
   const scored = checks.filter((c) => c.required || c.id.startsWith("rec-"));
@@ -203,7 +244,49 @@ export function planPack(input: EngineInput): PackPlan {
     suggestion = "Add the missing items, then check again.";
   }
 
-  return { verdict, evidenceType: type, evidenceInfo, usedFactIds: [...new Set(used)], documentIds, checks, completeness, canFileNow, reasons, suggestion, daysLeft };
+  const protection = protectionFor(d, facts.filter((f) => used.includes(f.id)), type);
+  // What the person approves is bound to the evidence itself: the facts used (with their quotes) and the bytes of
+  // every attached file. Change either and the approval no longer matches (reviews A02, A03).
+  const evidenceFingerprint = createHash("sha256").update(JSON.stringify({
+    facts: facts.filter((f) => used.includes(f.id)),
+    files: documentIds.map((id) => ({ id, sha256: docById.get(id)!.sha256, bytes: docById.get(id)!.bytes })),
+  })).digest("hex");
+  return { verdict, evidenceType: type, evidenceInfo, usedFactIds: [...new Set(used)], documentIds, checks, completeness, canFileNow, reasons, suggestion, daysLeft, protection, evidenceFingerprint };
+}
+
+/**
+ * The second bar. "PayPal accepts this evidence" (the verdict) is not "PayPal's Seller Protection would cover it".
+ * From PayPal's Seller Protection policy (paypal.com/us/legalhub/paypal/seller-protection, read for the 7 Nov reviews):
+ * physical item-not-received needs tracking with a delivered status, date and a recipient address matching the
+ * shipping address; intangible items need a record of the date sent and the recipient's email/IP or their access;
+ * not-as-described claims and item-not-received claims filed with a card issuer are not covered. Every evidence fact is
+ * the seller's own document: ClaimPack cannot vouch that it is genuine, and says so.
+ */
+function protectionFor(d: DisputeCase, used: Fact[], type?: EvidenceType): PackPlan["protection"] {
+  const own = "These are your own documents: ClaimPack checks them against PayPal's rules and records, not whether they are genuine.";
+  if (type === "PROOF_OF_REFUND") return { level: "NOT_APPLICABLE", reasons: ["You have already refunded the buyer through PayPal."] };
+  if (d.sellerProtectionEligible === false) return { level: "NOT_COVERED", reasons: ["PayPal marks this payment as not eligible for Seller Protection.", own] };
+  if (d.reason === "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED")
+    return { level: "NOT_COVERED", reasons: ["PayPal Seller Protection does not cover \"not as described\" claims. PayPal still reads your evidence; compare it with the cost of a refund.", own] };
+  if (d.reason === "MERCHANDISE_OR_SERVICE_NOT_RECEIVED" && d.channel === "EXTERNAL")
+    return { level: "NOT_COVERED", reasons: ["Item-not-received claims filed with the buyer's card issuer are not covered by Seller Protection.", own] };
+  if (d.reason !== "MERCHANDISE_OR_SERVICE_NOT_RECEIVED" && d.reason !== "UNAUTHORISED")
+    return { level: "NOT_ASSESSED", reasons: ["Seller Protection covers item-not-received and unauthorised payments; this reason is decided on the evidence alone.", own] };
+  const buyer = (who?: string) => sameBuyer(who, d.transaction) === true;
+  const physical = used.filter((f): f is Extract<Fact, { kind: "tracking" }> => f.kind === "tracking");
+  const goodPhysical = physical.filter((f) => f.status === "delivered" && !!f.at && buyer(f.recipient));
+  if (goodPhysical.length)
+    return { level: "LIKELY", reasons: ["Tracking shows a delivered status with a date, to the buyer PayPal knows.", "ClaimPack cannot yet compare the delivery address with the shipping address on the PayPal transaction; PayPal requires them to match.", own] };
+  const digital = used.filter((f): f is Extract<Fact, { kind: "delivery" }> => f.kind === "delivery" && f.method !== "physical");
+  const reached = (f: Extract<Fact, { kind: "delivery" }>) => buyer(f.recipient) || /@|\b\d{1,3}(\.\d{1,3}){3}\b/.test(f.cite.quote) || /\b(download|opened|accessed|viewed|logged in)/i.test(`${f.detail} ${f.cite.quote}`);
+  if (digital.some((f) => !!f.at && reached(f)))
+    return { level: "LIKELY", reasons: ["A dated record shows the item was sent to the buyer's address or accessed by them, which is what PayPal asks for intangible items.", own] };
+  const missing: string[] = [];
+  if (physical.length && !physical.some((f) => f.status === "delivered")) missing.push("tracking does not show \"delivered\"");
+  if (physical.length && !physical.some((f) => buyer(f.recipient))) missing.push("tracking does not name the buyer as recipient");
+  if (digital.length && !digital.some(reached)) missing.push("the delivery record shows neither the buyer's email or IP address nor that they opened the files");
+  if (!physical.length && !digital.length) missing.push("the only proof is a message, which is not one of the proofs PayPal lists");
+  return { level: "UNLIKELY", reasons: [`Seller Protection looks unlikely: ${missing.join("; ")}.`, own] };
 }
 
 type Of = <K extends Fact["kind"]>(k: K) => Extract<Fact, { kind: K }>[];
@@ -239,9 +322,13 @@ function requirementsFor(d: DisputeCase, of: Of, allowed: EvidenceType[]) {
       ok({ id: "fulfilment", label: "Proof the order was delivered (tracking, delivery record or buyer's confirmation)", required: true,
         detail: "PayPal asks for carrier + tracking number, or documents proving delivery." }, proof);
       for (const f of trackingFacts) tracking.push(trackingInfo(f));
-      const delivered = proof.filter((f) => (f.kind === "tracking" ? f.status === "delivered" : !!f.at));
-      checks.push({ id: "rec-delivered", label: "Delivery is confirmed and dated", status: delivered.length ? "ok" : "warn", required: false,
-        detail: delivered.length ? "A record shows delivery with a date." : "Only a shipment (no confirmed, dated delivery) was found.", factIds: delivered.map((f) => f.id) });
+      // Required since the 7 Nov reviews: PayPal's Seller Protection asks for a "delivered" status and date for physical
+      // goods, so tracking that only shows the parcel shipped or in transit leaves the pack incomplete.
+      // The buyer's own confirmation shows the delivery happened even when the message carries no date.
+      const delivered = proof.filter((f) => (f.kind === "tracking" ? f.status === "delivered" : f.kind === "acknowledgement" ? true : !!f.at));
+      if (proof.length) checks.push({ id: "delivered", label: "Delivery is confirmed (delivered status, a dated delivery record, or the buyer's confirmation)", required: true,
+        status: delivered.length ? "ok" : "missing",
+        detail: delivered.length ? "A record shows the delivery happened." : "The tracking shows the parcel shipped or in transit, not delivered. Add the carrier's delivery confirmation.", factIds: delivered.map((f) => f.id) });
       recLinked(proof);
       // What was sold: lets PayPal match the delivered files to the order (attached as supporting documents).
       ok({ id: "rec-what-sold", label: "What was sold (invoice or listing)", required: false, detail: "Shows PayPal that what was delivered is what the buyer paid for." },

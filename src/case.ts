@@ -28,8 +28,10 @@ export async function refundsFor(pp: PayPal, txId: string, fresh = false): Promi
 }
 
 export async function buildCase(store: Store, pp: PayPal, disputeId: string, opts: { now?: string; fresh?: boolean } = {}) {
-  const raw = store.dispute(disputeId);
+  let raw = store.dispute(disputeId);
   if (!raw) throw new Error(`Unknown dispute ${disputeId}. Sync with PayPal first.`);
+  // Before a filing, ask PayPal again: the actions it allows may have changed since the last sync (review A04).
+  if (opts.fresh) { raw = await pp.getDispute(disputeId); store.upsertDispute(raw); }
   const dispute = toDisputeCase(raw);
   const docs = store.docs(dispute.transaction.id);
   const reads = docs.map((d) => ({ doc: d, read: store.read(d.id) }));

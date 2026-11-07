@@ -68,11 +68,12 @@ describe("item not received", () => {
     const p = run({ facts: [{ id: "f1", kind: "tracking", carrier: "UPS", trackingNumber: "1Z999", status: "delivered", orderRef: "INV-1042", recipient: "Jane Smith", cite: cite("tracking") }] });
     expect(p.verdict).toBe("CONFLICT");
   });
-  it("a shipment without confirmed delivery is still filable but scores lower", () => {
+  it("a shipment without confirmed delivery is incomplete (rule tightened 7 Nov, following PayPal's Seller Protection)", () => {
     const delivered = run({ facts: [{ id: "f1", kind: "tracking", carrier: "UPS", trackingNumber: "1Z1", status: "delivered", at: "2026-11-04T00:00:00Z", orderRef: "INV-1042", cite: cite("tracking") }] });
     const shipped = run({ facts: [{ id: "f1", kind: "tracking", carrier: "UPS", trackingNumber: "1Z1", status: "shipped", orderRef: "INV-1042", cite: cite("tracking") }] });
-    expect(shipped.verdict).toBe("READY");
-    expect(shipped.completeness).toBeLessThan(delivered.completeness);
+    expect(delivered.verdict).toBe("READY");
+    expect(shipped.verdict).toBe("INCOMPLETE");
+    expect(shipped.reasons.join(" ")).toMatch(/Delivery is confirmed/);
   });
   it("warns when delivery is dated after the dispute opened", () => {
     const p = run({ facts: [{ id: "f1", kind: "delivery", method: "physical", at: "2026-11-06T08:00:00Z", detail: "left at door", orderRef: "INV-1042", cite: cite("delivery-log") }] });
@@ -152,12 +153,12 @@ describe("other reasons", () => {
     expect(onlyDelivery.verdict).toBe("INCOMPLETE");
     expect(onlyDelivery.reasons.join(" ")).toMatch(/promised/);
   });
-  it("incorrect amount: an invoice matching the charge is the defence; a partial refund PayPal confirms is filed as a refund", () => {
+  it("incorrect amount: an invoice matching the charge is the defence; a refund counts only if it covers the disputed amount (7 Nov)", () => {
     const d = dispute({ reason: "INCORRECT_AMOUNT" });
     const inv = planPack({ dispute: d, docs: [doc("invoice")], now: NOW, facts: [{ id: "f1", kind: "invoice", orderRef: "INV-1042", amount: { value: "120.00", currency: "USD" }, cite: cite("invoice") }] });
     expect(inv.verdict).toBe("READY");
     const part = planPack({ dispute: d, docs: [], now: NOW, facts: [], verifiedRefunds: [{ id: "R-2", captureId: "4JJ59706F4419253F", amount: { value: "20.00", currency: "USD" }, status: "COMPLETED" }] });
-    expect(part.evidenceType).toBe("PROOF_OF_REFUND");
+    expect(part.evidenceType).not.toBe("PROOF_OF_REFUND"); // 20.00 refunded of 120.00 disputed
   });
   it("unauthorised with tracking to the account holder is fulfilment; without tracking it falls back to OTHER", () => {
     const d = dispute({ reason: "UNAUTHORISED" });

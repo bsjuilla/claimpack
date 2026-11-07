@@ -76,7 +76,8 @@ export const CASES: EvalCase[] = [
   { id: "c06", title: "Tracking still says in transit", trap: "shipped, not delivered",
     dispute: dispute({ reason: "MERCHANDISE_OR_SERVICE_NOT_RECEIVED", amount: "38.00", buyer: "Noah Becker", email: "noah.becker@example.com", invoice: "INV-3106", paid: "2026-10-25T08:00:00Z", opened: "2026-11-04T08:00:00Z" }),
     refunds: [], docs: [{ kind: "tracking-png", name: "tracking.png", carrier: "UPS", number: "1Z 999 AA1 01 2345 6784", status: "In transit", at: "Oct 27, 2026 6:10 AM", recipient: "Noah Becker", city: "Austin, TX", order: "INV-3106" }],
-    gold: { verdict: "READY", evidenceType: "PROOF_OF_FULFILLMENT", carrier: "UPS" } },
+    // Gold changed 7 Nov (was READY): PayPal's Seller Protection needs a "delivered" status, so in-transit tracking is now incomplete.
+    gold: { verdict: "INCOMPLETE", carrier: "UPS" } },
   { id: "c07", title: "Tracking belongs to a different order", trap: "foreign document",
     dispute: dispute({ reason: "MERCHANDISE_OR_SERVICE_NOT_RECEIVED", amount: "52.00", buyer: "Grace Liu", email: "grace.liu@example.com", invoice: "INV-3107", paid: "2026-10-14T08:00:00Z", opened: "2026-10-31T08:00:00Z" }),
     refunds: [], docs: [

@@ -26,6 +26,10 @@ export interface DisputeCase {
   sellerResponseDue?: string; // ISO
   actions: string[]; // HATEOAS link rels, e.g. ["provide_evidence", "accept_claim"]
   buyerStatement?: string;
+  /** INTERNAL (PayPal) or EXTERNAL (the buyer's card issuer); affects Seller Protection */
+  channel?: string;
+  /** PayPal's own view of whether this payment is eligible for Seller Protection (null = not said) */
+  sellerProtectionEligible?: boolean | null;
   transaction: {
     id: string; // seller transaction (capture) id
     invoiceId?: string; // merchant's own order/invoice reference, if PayPal has it
@@ -106,4 +110,8 @@ export interface PackPlan {
   /** what to do instead / next */
   suggestion?: string;
   daysLeft?: number;
+  /** A second, stricter bar than "PayPal accepts this evidence": would PayPal's Seller Protection likely cover it? */
+  /** sha256 of the facts used and the attached files' hashes: approval is bound to it */
+  evidenceFingerprint: string;
+  protection: { level: "LIKELY" | "UNLIKELY" | "NOT_COVERED" | "NOT_APPLICABLE" | "NOT_ASSESSED"; reasons: string[] };
 }

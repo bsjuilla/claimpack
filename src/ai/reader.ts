@@ -5,6 +5,7 @@ import { basename, extname } from "node:path";
 import OpenAI from "openai";
 import { z } from "zod";
 import type { Fact } from "../types";
+import { DELIVERY_FAILED } from "../rules/engine";
 
 export const PRICE = { in: 1.25, out: 4.25 }; // Muse Spark 1.3, USD per 1M tokens (dev.meta.ai pricing, read 26 Oct 2026)
 
@@ -142,9 +143,13 @@ export function toFacts(docId: string, out: ReaderOutput): { facts: Fact[]; drop
         return;
       case "delivery": {
         // A date without a year ("05/10 08:45") is kept as written; the rules engine resolves it against the payment.
-        const loose = !s(x.at) && /\b\d{1,2}[/.-]\d{1,2}\b/.test(cite.quote) ? cite.quote : undefined;
-        if (!s(x.at) && !loose) return drop("needs a date");
-        facts.push({ id, kind: "delivery", method: x.delivery_method ?? "physical", at: s(x.at) ?? "", atText: loose, detail: s(x.detail) ?? cite.quote, recipient: s(x.recipient), orderRef: s(x.order_ref) ?? s(x.transaction_id), cite });
+        // The document's own words decide: a quote saying the delivery failed is not a delivery, whatever the
+        // model's summary says (review R01). An "at" that is not a date counts as no date (R02).
+        if (DELIVERY_FAILED.test(cite.quote)) return drop("the document says the delivery did not succeed");
+        const at = s(x.at) && !Number.isNaN(Date.parse(s(x.at)!)) ? s(x.at) : undefined;
+        const loose = !at && /\b\d{1,2}[/.-]\d{1,2}\b/.test(cite.quote) ? cite.quote : undefined;
+        if (!at && !loose) return drop("needs a date");
+        facts.push({ id, kind: "delivery", method: x.delivery_method ?? "physical", at: at ?? "", atText: loose, detail: s(x.detail) ?? cite.quote, recipient: s(x.recipient), orderRef: s(x.order_ref) ?? s(x.transaction_id), cite });
       }
         return;
       case "refund":

@@ -18,6 +18,8 @@ export function toDisputeCase(raw: any): DisputeCase {
     sellerResponseDue: raw.seller_response_due_date,
     actions: (raw.links ?? []).map((l: any) => l.rel),
     buyerStatement: [...new Set(buyerWords)].join("\n") || undefined,
+    channel: raw.dispute_channel ?? undefined,
+    sellerProtectionEligible: typeof tx.seller_protection_eligible === "boolean" ? tx.seller_protection_eligible : null,
     transaction: {
       id: tx.seller_transaction_id,
       invoiceId: tx.invoice_number || undefined,

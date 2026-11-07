@@ -3,6 +3,20 @@
 
 const RE = /\b(\d{1,2})[/.-](\d{1,2})(?:[/.-](\d{2,4}))?(?:[ T,]+(\d{1,2}):(\d{2}))?/;
 
+/** Every distinct calendar reading of a loose date (day-first and month-first) in the payment's year. */
+export function looseDateReadings(text: string, refIso: string): string[] {
+  const m = text.match(RE);
+  if (!m) return [];
+  const y = new Date(Date.parse(refIso)).getUTCFullYear();
+  const out = new Set<string>();
+  for (const [day, month] of [[Number(m[1]), Number(m[2])], [Number(m[2]), Number(m[1])]]) {
+    if (month < 1 || month > 12 || day < 1 || day > 31) continue;
+    const t = Date.UTC(m[3] ? (m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3])) : y, month - 1, day);
+    if (new Date(t).getUTCDate() === day) out.add(new Date(t).toISOString().slice(0, 10));
+  }
+  return [...out];
+}
+
 /** Returns "YYYY-MM-DDTHH:MM" (no timezone, as written) for the reading of `text` nearest `refIso`, or undefined. */
 export function resolveLooseDate(text: string, refIso: string): string | undefined {
   const m = text.match(RE);

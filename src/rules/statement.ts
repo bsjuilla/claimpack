@@ -2,9 +2,10 @@
 // Every sentence must cite at least one fact the rules engine used, and every number, date, link or email in it must
 // appear in what those facts (or PayPal's own record of the dispute) actually say. Nothing is added or "improved".
 import type { DisputeCase, EvidenceDoc, Fact } from "../types";
+import { claimProblems, structureProblems } from "./claims";
 
 export const MAX_NOTES = 2000;
-const ACCUSATION = /\b(fraud|fraudulent|scam(mer)?|lying|liar|lied|steal(ing)?|stole|thief|criminal|dishonest)\b/i;
+const ACCUSATION = /\b(fraud|fraudulent|scam(mer)?|lying|liar|lied|steal(ing)?|stole|thief|criminal|dishonest|false\s+claims?|abus\w*|bad\s+faith|deceiv\w*|cheat\w*|scheme|malicious|untruthful|fake)\b/i;
 const CITE = /\[(F[\w-]+)\]/g;
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 const M = `(${MONTHS.join("|")})[a-z]*\\.?`;
@@ -63,9 +64,10 @@ export function sentences(text: string): string[] {
 export function checkStatement(draft: string, facts: Fact[], usedFactIds: string[], dispute: DisputeCase, docs: EvidenceDoc[]): StatementCheck {
   const byId = new Map(facts.map((f) => [f.id, f]));
   const docName = new Map(docs.map((d) => [d.id, d.name]));
-  const known = flat([dispute.id, dispute.amount.value, dispute.transaction.id, dispute.transaction.invoiceId ?? "", dispute.transaction.amount.value,
+  const known = flat([dispute.id, dispute.amount.value, dispute.amount.currency, dispute.transaction.id, dispute.transaction.invoiceId ?? "", dispute.transaction.amount.value,
     dispute.createTime, dispute.transaction.createTime].join(" "));
-  const problems: StatementCheck["problems"] = [];
+  const problems: StatementCheck["problems"] = structureProblems(draft).map((problem) => ({ sentence: "", problem }));
+  draft = draft.normalize("NFKC"); // look-alike digits ("９９９") become ordinary ones, so the number checks see them
 
   const parts = sentences(draft);
   if (!parts.length) problems.push({ sentence: "", problem: "The statement is empty." });
@@ -101,6 +103,12 @@ export function checkStatement(draft: string, facts: Fact[], usedFactIds: string
     for (const tok of text.match(/https?:\/\/\S+|[\w.+-]+@[\w-]+\.[\w.]+/g) ?? [])
       if (!hay.includes(flat(tok).replace(/[.,)]$/, ""))) problems.push({ sentence: report, problem: `"${tok}" does not appear in the cited documents` });
     if (ACCUSATION.test(text)) problems.push({ sentence: report, problem: "accuses the buyer; state facts only" });
+    // What a fact is also licenses the words for it: the buyer's acknowledgement may be called "confirmed receipt",
+    // a delivery record "delivered", a refund "refunded". Nothing else (a delivery log never licenses "satisfied").
+    const IMPLIED: Partial<Record<Fact["kind"], string>> = { acknowledgement: "confirmed received acknowledged", delivery: "delivered", tracking: "delivered shipped", refund: "refunded" };
+    const quotes = cited.flatMap((f) => [f.cite.quote, "text" in f ? f.text : "", "detail" in f ? f.detail : "", IMPLIED[f.kind] ?? ""]).filter(Boolean);
+    for (const problem of claimProblems({ text: report, quotes, hay, nums, isoDates: hay.match(/\d{4}-\d{2}-\d{2}/g) ?? [] }))
+      problems.push({ sentence: report, problem });
   }
 
   const notes = parts
