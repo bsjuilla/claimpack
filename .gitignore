@@ -8,3 +8,4 @@ data/
 spike/sale.json
 tmp/
 .claude/
+eval/runs/*/results-replay.json

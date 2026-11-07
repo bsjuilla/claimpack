@@ -112,9 +112,11 @@ const summary = {
   costUsd: { reading: Number(readCost.toFixed(4)), drafting: Number(draftCost.toFixed(4)) },
   failures: rows.filter((r) => !r.ok).map((r) => ({ id: r.id, title: r.title, gold: r.gold, got: r.got, failed: Object.entries(r.checks).filter(([, v]) => !v).map(([k]) => k) })),
 };
-writeFileSync(join(RUN_DIR, "results.json"), JSON.stringify({ summary, rows }, null, 1));
+// A replay never overwrites the published record: it writes beside it.
+const OUT_NAME = REPLAY ? "results-replay.json" : "results.json";
+writeFileSync(join(RUN_DIR, OUT_NAME), JSON.stringify({ summary, rows }, null, 1));
 mkdirSync(join(ROOT, "eval", "results"), { recursive: true });
-writeFileSync(join(ROOT, "eval", "results", `${RUN}.json`), JSON.stringify(summary, null, 1));
+if (!REPLAY) writeFileSync(join(ROOT, "eval", "results", `${RUN}.json`), JSON.stringify(summary, null, 1));
 
 console.log("\n id  | gold        | got         | type | attach | ok | trap");
 for (const r of rows) console.log(` ${r.id} | ${r.gold.padEnd(11)} | ${r.got.padEnd(11)} | ${r.checks.type ? " ok " : "FAIL"} | ${r.checks.attach && r.checks.notAttach ? "  ok  " : " FAIL "} | ${r.ok ? "ok" : "--"}${r.dangerous ? " DANGEROUS" : ""} | ${r.trap}`);
