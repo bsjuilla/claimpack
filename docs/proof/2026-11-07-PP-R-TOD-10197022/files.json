@@ -1,0 +1,29 @@
+{
+  "readAt": "2026-11-07T18:39:21.450Z",
+  "files": [
+    {
+      "name": "evidence-summary.pdf",
+      "sentBytes": 2698,
+      "sentSha256": "c3f3f50bf0c721a4e90be3a4ef9238532b670b00c6ad248ea52ec0f069346b07",
+      "paypalBytes": 2698,
+      "paypalSha256": "c3f3f50bf0c721a4e90be3a4ef9238532b670b00c6ad248ea52ec0f069346b07",
+      "identical": true
+    },
+    {
+      "name": "invoice-INV-2084.pdf",
+      "sentBytes": 1846,
+      "sentSha256": "bcf7257da9cde9d5d9cc0e13b21b323b1c9caee9d4234ad313a7a1a825f337cb",
+      "paypalBytes": 1846,
+      "paypalSha256": "bcf7257da9cde9d5d9cc0e13b21b323b1c9caee9d4234ad313a7a1a825f337cb",
+      "identical": true
+    },
+    {
+      "name": "delivery-log.pdf",
+      "sentBytes": 1618,
+      "sentSha256": "75b10e0ba21e2508e03baf3b51088ec3e59da10335a6d16b72d5536c65ab617a",
+      "paypalBytes": 1618,
+      "paypalSha256": "75b10e0ba21e2508e03baf3b51088ec3e59da10335a6d16b72d5536c65ab617a",
+      "identical": true
+    }
+  ]
+}

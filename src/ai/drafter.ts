@@ -18,6 +18,7 @@ Rules:
 - End EVERY sentence with the id(s) of the fact(s) it relies on, in square brackets, e.g. "The files were downloaded at 16:07 UTC on 5 November 2026 [F4]."
 - Every number, date, time, ID, link and email you write must appear in the cited facts exactly. Do not round, convert or add anything.
 - Write dates as "5 November 2026" and times as "16:07 UTC" (only if the fact gives a time and a timezone).
+- When you repeat someone's words (a message, a reply, a note), copy them exactly and put them inside double quotes, e.g. The buyer replied "Thanks, all received" [F5]. Never paraphrase a message without quotes.
 - Never accuse the buyer (no "fraud", "lying", "scam"). State what the records show.
 - Leave out email addresses and IP addresses: PayPal masks emails in the statement anyway ("xxxx"). Say "the buyer's email address" instead.
 - Do not name the documents or say "the records show": the document names are added after each sentence automatically. Say what happened.

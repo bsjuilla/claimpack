@@ -56,7 +56,11 @@ export class PayPal {
     return body as T;
   }
 
-  listDisputes(pageSize = 50) { return this.call<{ items?: any[] }>("list disputes", `/v1/customer/disputes?page_size=${pageSize}`); }
+  /** Disputes created in the last `days` days. With no start_time PayPal leaves out new disputes still UNDER_REVIEW (seen 7 Nov). */
+  listDisputes(pageSize = 50, days = 90) {
+    const since = new Date(Date.now() - days * 86_400_000).toISOString();
+    return this.call<{ items?: any[] }>("list disputes", `/v1/customer/disputes?page_size=${pageSize}&start_time=${encodeURIComponent(since)}`);
+  }
   getDispute(id: string) { return this.call("show dispute", `/v1/customer/disputes/${encodeURIComponent(id)}`); }
   getCapture(id: string) { return this.call("show capture", `/v2/payments/captures/${encodeURIComponent(id)}`); }
   getOrder(id: string) { return this.call("show order", `/v2/checkout/orders/${encodeURIComponent(id)}`); }

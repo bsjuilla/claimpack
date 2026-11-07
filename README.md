@@ -46,7 +46,7 @@ Chargeback agencies do this for large merchants and keep about a quarter of what
 | Approval and filing | The seller drafted, read and approved the statement in ClaimPack; `provide-evidence` returned 200 |
 | PayPal's record | Read back from PayPal: `SUBMITTED_BY_SELLER`, `PROOF_OF_FULFILLMENT`, documents `evidence-summary.pdf` and `delivery-log.pdf`; status `WAITING_FOR_BUYER_RESPONSE` |
 
-The proof bundle in [`docs/proof/2026-11-07-PP-R-XYA-10196950/`](docs/proof/2026-11-07-PP-R-XYA-10196950/) has the request sent, PayPal's record read back today, and the SHA-256 of each file PayPal holds: **byte-identical** to what ClaimPack logged sending.
+The proof bundle in [`docs/proof/2026-11-07-PP-R-XYA-10196950/`](docs/proof/2026-11-07-PP-R-XYA-10196950/) has the request sent, PayPal's record read back today, and the SHA-256 of each file PayPal holds: **byte-identical** to what ClaimPack logged sending. The filing shown in the demo video (`PP-R-TOD-10197022`, invoice INV-2084, approved as "Sam Seller") has its own bundle: [`docs/proof/2026-11-07-PP-R-TOD-10197022/`](docs/proof/2026-11-07-PP-R-TOD-10197022/), three files, all identical.
 
 ## Measured on 30 synthetic disputes
 

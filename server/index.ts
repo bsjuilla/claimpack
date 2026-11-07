@@ -407,7 +407,7 @@ async function pollPayPal() {
     let changed = 0;
     for (const item of list.items ?? []) {
       const known = store.dispute(item.dispute_id);
-      if (known && known.update_time === item.update_time) continue;
+      if (known && Date.parse(known.update_time) === Date.parse(item.update_time)) continue; // PayPal formats the same time differently in list and show
       await syncDispute(item.dispute_id);
       broadcast("dispute", item.dispute_id);
       changed++;
@@ -416,7 +416,7 @@ async function pollPayPal() {
   } catch (e) { console.error("PayPal poll failed:", (e as Error).message); }
   finally { polling = false; }
 }
-if (POLL_SECONDS > 0) { setInterval(pollPayPal, POLL_SECONDS * 1000); setTimeout(pollPayPal, 2000); }
+if (POLL_SECONDS > 0) { setInterval(pollPayPal, POLL_SECONDS * 1000); setTimeout(pollPayPal, Number(process.env.CLAIMPACK_FIRST_POLL_MS ?? 2000)); }
 
 app.get("/api/watch", (c) => c.json({ pollSeconds: POLL_SECONDS, webhook: !!process.env.PAYPAL_WEBHOOK_ID }));
 

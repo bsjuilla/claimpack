@@ -1,0 +1,121 @@
+{
+  "dispute_id": "PP-R-TOD-10197022",
+  "create_time": "2026-11-07T17:59:09.859Z",
+  "update_time": "2026-11-07T18:27:36.339Z",
+  "disputed_transactions": [
+    {
+      "buyer_transaction_id": "73727091ST078490P",
+      "seller_transaction_id": "89R00597U3817984X",
+      "create_time": "2026-11-07T17:33:30.000Z",
+      "transaction_status": "HELD",
+      "gross_amount": {
+        "currency_code": "USD",
+        "value": "140.00"
+      },
+      "invoice_number": "INV-2084",
+      "buyer": {
+        "email": "[email redacted]",
+        "payer_id": "[redacted]",
+        "name": "John Doe"
+      },
+      "seller": {
+        "email": "[email redacted]",
+        "merchant_id": "[redacted]",
+        "name": "Test Store"
+      },
+      "items": [
+        {
+          "item_name": "Logo design files",
+          "item_description": "Logo design files",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "DIGITAL_DOWNLOAD"
+        }
+      ],
+      "seller_protection_eligible": true,
+      "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+    }
+  ],
+  "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+  "status": "WAITING_FOR_BUYER_RESPONSE",
+  "dispute_amount": {
+    "currency_code": "USD",
+    "value": "140.00"
+  },
+  "dispute_state": "REQUIRED_OTHER_PARTY_ACTION",
+  "fund_movements": [
+    {
+      "party": "RECEIVER",
+      "amount": {
+        "currency_code": "USD",
+        "value": "134.94"
+      },
+      "initiated_time": "2026-11-07T18:02:13.000Z",
+      "type": "DEBIT",
+      "reason": "HOLD_PLACED"
+    }
+  ],
+  "dispute_life_cycle_stage": "INQUIRY",
+  "dispute_channel": "INTERNAL",
+  "messages": [
+    {
+      "posted_by": "BUYER",
+      "time_posted": "2026-11-07T17:59:09.859Z",
+      "content": "I paid for the logo design files but never received them."
+    }
+  ],
+  "extensions": {
+    "buyer_contacted_time": "2026-11-07T17:59:09.205Z"
+  },
+  "evidences": [
+    {
+      "evidence_type": "CREATE",
+      "notes": "I paid for the logo design files but never received them.",
+      "source": "SUBMITTED_BY_BUYER",
+      "date": "2026-11-07T17:59:09.859Z",
+      "dispute_life_cycle_stage": "INQUIRY",
+      "documents": []
+    },
+    {
+      "evidence_type": "PROOF_OF_FULFILLMENT",
+      "documents": [
+        {
+          "name": "evidence-summary.pdf"
+        },
+        {
+          "name": "invoice-INV-2084.pdf"
+        },
+        {
+          "name": "delivery-log.pdf"
+        }
+      ],
+      "notes": "The order INV-2084 was for \"Logo design, 3 concepts (digital delivery): vector files AI, SVG, PNG\" for 140.00 USD under transaction 89R00597U3817984X (see invoice-INV-2084.pdf). A download link was created for logo-final-INV-2084.zip (18.6 MB) at 17:34 UTC on 7 November 2026 and emailed to the buyer's email address (see delivery-log.pdf). The link was opened and logo-final-INV-2084.zip was downloaded at 17:36 UTC on 7 November 2026 (see delivery-log.pdf). A further download of logo-final-INV-2084.zip completed at 17:38 UTC on 7 November 2026 (see delivery-log.pdf). The client replied \"Got the files, thanks! Concept B is exactly what we wanted.\" at 17:39 UTC on 7 November 2026 (see delivery-log.pdf).",
+      "source": "SUBMITTED_BY_SELLER",
+      "date": "2026-11-07T18:27:26.936Z",
+      "action_info": {
+        "action": "PROVIDE_EVIDENCE"
+      },
+      "dispute_life_cycle_stage": "INQUIRY"
+    }
+  ],
+  "buyer_response_due_date": "2026-11-27T17:59:09.859Z",
+  "offer": {
+    "buyer_requested_amount": {
+      "currency_code": "USD",
+      "value": "140.00"
+    }
+  },
+  "refund_details": {
+    "allowed_refund_amount": {
+      "currency_code": "USD",
+      "value": "140.00"
+    }
+  },
+  "allowed_response_options": {
+    "accept_claim": {
+      "accept_claim_types": [
+        "REFUND"
+      ]
+    }
+  }
+}
