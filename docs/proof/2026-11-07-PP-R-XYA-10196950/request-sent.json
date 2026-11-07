@@ -1,0 +1,22 @@
+{
+  "filedAt": "2026-11-07T07:21:23.903Z",
+  "approvedBy": "[redacted]",
+  "httpStatus": 200,
+  "input": {
+    "evidences": [
+      {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "evidence_info": {},
+        "documents": [
+          {
+            "name": "evidence-summary.pdf"
+          },
+          {
+            "name": "delivery-log.pdf"
+          }
+        ],
+        "notes": "The download link for logo-final-INV-2041.zip was emailed to [email redacted] on 7 November 2026 at 07:06 UTC (see delivery-log.pdf). The file logo-final-INV-2041.zip was downloaded on 7 November 2026 at 07:07 UTC (see delivery-log.pdf). A second download of logo-final-INV-2041.zip occurred on 7 November 2026 at 07:09 UTC (see delivery-log.pdf). On 7 November 2026 at 07:10 UTC a message confirmed the files were received and stated Concept B is exactly what we wanted (see delivery-log.pdf)."
+      }
+    ]
+  }
+}

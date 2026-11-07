@@ -1,0 +1,21 @@
+{
+  "readAt": "2026-11-07T13:02:12.528Z",
+  "files": [
+    {
+      "name": "evidence-summary.pdf",
+      "sentBytes": 2287,
+      "sentSha256": "e50d4031ea7ccffeb21a6d9039b6cd24b818c743f086e949f1c74d3d57153b32",
+      "paypalBytes": 2287,
+      "paypalSha256": "e50d4031ea7ccffeb21a6d9039b6cd24b818c743f086e949f1c74d3d57153b32",
+      "identical": true
+    },
+    {
+      "name": "delivery-log.pdf",
+      "sentBytes": 1610,
+      "sentSha256": "f692608ad597642fe8ba448ac501f7e0e6c214f752fe44de098fb9805065f446",
+      "paypalBytes": 1610,
+      "paypalSha256": "f692608ad597642fe8ba448ac501f7e0e6c214f752fe44de098fb9805065f446",
+      "identical": true
+    }
+  ]
+}

@@ -42,6 +42,8 @@ Chargeback agencies do this for large merchants and keep about a quarter of what
 | Approval and filing | The seller drafted, read and approved the statement in ClaimPack; `provide-evidence` returned 200 |
 | PayPal's record | Read back from PayPal: `SUBMITTED_BY_SELLER`, `PROOF_OF_FULFILLMENT`, documents `evidence-summary.pdf` and `delivery-log.pdf`; status `WAITING_FOR_BUYER_RESPONSE` |
 
+The proof bundle in [`docs/proof/2026-11-07-PP-R-XYA-10196950/`](docs/proof/2026-11-07-PP-R-XYA-10196950/) has the request sent, PayPal's record read back today, and the SHA-256 of each file PayPal holds: **byte-identical** to what ClaimPack logged sending.
+
 ## Measured on 30 synthetic disputes
 
 Thirty disputes across seven of PayPal's dispute reasons, each with the documents a real seller might hold: invoice PDFs, delivery logs, carrier tracking pages and chat conversations **as images**, listings, refund emails, contracts and subscription terms (39 documents, all stamped SPECIMEN). Planted traps: tracking for another order, a parcel delivered to someone else, an invoice that disagrees with what PayPal charged, a refund ID PayPal never issued, instructions to the AI hidden in a delivery log and in a listing, a missed deadline, a carrier PayPal does not list, a delivery after the complaint, and dates written without a year. The real pipeline ran on every case: Muse Spark read each document, the rules engine decided, and for every case judged ready the drafter wrote a statement checked by the guard.
