@@ -6,6 +6,12 @@ Built for the PayPal AI Hackathon (Devpost), solo, 5 to 12 November 2026. All da
 
 > The model reads. Code decides. A person approves.
 
+![A dispute in ClaimPack: ready to file, with PayPal's requirement filled by the exact words of the seller's delivery log](docs/screenshots/02-case.png)
+
+| Disputes, soonest deadline first | What PayPal received, after a named person approved |
+|---|---|
+| ![Disputes page](docs/screenshots/01-disputes.png) | ![Statement and filing](docs/screenshots/03-statement-and-filing.png) |
+
 ---
 
 ## The problem

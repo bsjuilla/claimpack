@@ -149,6 +149,7 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
 
   const files = ["evidence-summary.pdf", ...plan.documentIds.map((d) => kase.docs.find((x) => x.id === d)?.name ?? d)];
   const request = plan.evidenceType ? { evidences: [{ evidence_type: plan.evidenceType, evidence_info: { ...(plan.evidenceInfo.tracking_info ? { tracking_info: plan.evidenceInfo.tracking_info } : {}), ...(plan.evidenceInfo.refund_ids ? { refund_ids: plan.evidenceInfo.refund_ids } : {}) }, documents: files.map((n) => ({ name: n })), notes: check?.notes ?? "(the statement, once written)" }] } : null;
+  const filed = [...kase.filings].reverse().find((f) => f.status === 200);
   const canFile = plan.verdict === "READY" && plan.canFileNow && !!check?.ok && name.trim().length > 1 && sure && busy === "";
 
   async function draft() {
@@ -182,6 +183,20 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
       {kase.context.sellerEvidenceFiled.length > 0 && kase.filings.length === 0 && (
         <div className="filed">PayPal already has seller evidence on this dispute ({kase.context.sellerEvidenceFiled.map((e) => EVIDENCE_WORD[e.type] ?? e.type).join(", ")}). PayPal accepts one filing per stage.</div>
       )}
+      {filed ? (
+        // Once filed, show what PayPal actually received, not a preview of what the current rules would send.
+        <div className="file-grid" style={{ marginTop: 14 }}>
+          <div className="panel">
+            <h3 style={{ marginBottom: 10 }}>The statement PayPal received</h3>
+            <p className="quote" style={{ fontSize: 16, lineHeight: 1.6 }}>{filed.request?.evidences?.[0]?.notes}</p>
+          </div>
+          <div className="panel">
+            <h3 style={{ marginBottom: 10 }}>The request that was sent</h3>
+            <pre className="request">{JSON.stringify(filed.request, null, 2)}</pre>
+            <p className="small muted" style={{ marginTop: 8 }}>Files and their SHA-256 fingerprints: {filed.files.map((x) => `${x.name} (${x.sha256.slice(0, 12)}…)`).join(", ")}</p>
+          </div>
+        </div>
+      ) : <>
       <div className="file-grid" style={{ marginTop: 14 }}>
         <div className="panel">
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
@@ -207,6 +222,7 @@ function Filing({ kase, id, onFiled }: { kase: Case; id: string; onFiled: (k: Ca
         </div>
         {!plan.canFileNow && <p className="small muted" style={{ marginTop: 10 }}>PayPal is not accepting evidence on this dispute right now{kase.context.sellerEvidenceFiled.length ? " (evidence was already filed)" : ""}.</p>}
       </div>
+      </>}
     </section>
   );
 }
